@@ -37,7 +37,7 @@ claude mcp add kalagh --scope user \
   -e KALAGH_TRANSPORT=grpc \
   -e KALAGH_GRPC_URL=kalagh-grpc.smg.tr:443 \
   -e KALAGH_WS_URL=https://kalagh-ws.smg.tr \
-  -- node /Users/aslan_nejad/Desktop/DEV/achasoft/kalagh-mcp/dist/index.js
+  -- node /path/to/kalagh-mcp/dist/index.js
 ```
 
 `claude mcp list` should show `kalagh` as connected. Inside a session, `/mcp` shows its tools,
@@ -51,7 +51,7 @@ environment variables in it, so the key stays in your shell profile:
   "mcpServers": {
     "kalagh": {
       "command": "node",
-      "args": ["/Users/aslan_nejad/Desktop/DEV/achasoft/kalagh-mcp/dist/index.js"],
+      "args": ["/path/to/kalagh-mcp/dist/index.js"],
       "env": {
         "KALAGH_API_URL": "https://kalagh.smg.tr",
         "KALAGH_API_KEY": "${KALAGH_API_KEY}",
