@@ -97,7 +97,8 @@ export class HttpTransport implements Transport {
       body: form,
     });
     const result = await this.parse(response);
-    // The route answers 200 with { error } when no file part arrived.
+    // A provider built before the route threw BadRequestException answered 200
+    // with { error } when no file part arrived; still in service, so still caught.
     if (result && typeof result === 'object' && 'error' in result && !('message' in result)) {
       throw new KalaghError(String((result as { error: unknown }).error), 400);
     }
@@ -106,22 +107,20 @@ export class HttpTransport implements Transport {
 
   /**
    * GET /storage/<path> — public, so the key is never sent. A full URL is
-   * accepted as found in an attachment; one on another host (a presigned
-   * object-store link) is fetched as it is.
+   * accepted as found in an attachment, but only on the provider's own origin
+   * or one listed in KALAGH_STORAGE_ORIGINS (the object store a presigned link
+   * points at): the path can come from a stranger's message, and this must
+   * never become a way to make the host fetch arbitrary addresses.
    */
   async download(pathOrUrl: string): Promise<Download> {
-    const trimmed = pathOrUrl.trim();
-    if (!trimmed) throw new KalaghError('path is required', 400);
-    const url = /^https?:\/\//i.test(trimmed)
-      ? trimmed
-      : `${this.config.apiUrl}/storage/${trimmed.replace(/^\/+/, '').replace(/^storage\//, '')}`;
-
-    const response = await this.fetch(url, { method: 'GET' });
+    const url = resolveStorageUrl(pathOrUrl, this.config.apiUrl, this.config.storageOrigins);
+    const response = await this.fetch(url, { method: 'GET', redirect: 'manual' });
+    if (response.status >= 300 && response.status < 400) {
+      throw new KalaghError(`GET ${url} redirected to ${response.headers.get('location') ?? 'elsewhere'}; redirects are not followed`, response.status);
+    }
     if (!response.ok) throw new KalaghError(`GET ${url} answered ${response.status}`, response.status);
     const bytes = Buffer.from(await response.arrayBuffer());
-    const disposition = response.headers.get('content-disposition') ?? '';
-    const named = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(disposition)?.[1];
-    const filename = decodeURIComponent(named ?? basename(new URL(url).pathname)) || 'download';
+    const filename = filenameFrom(response.headers.get('content-disposition'), url);
     return { kind: 'download', bytes, mimeType: response.headers.get('content-type') ?? guessMimeType(filename), filename };
   }
 
@@ -153,4 +152,53 @@ export class HttpTransport implements Transport {
     }
     return body;
   }
+}
+
+/**
+ * A storage path (`media/…`, `/storage/media/…`) or a full URL → the URL to
+ * fetch. A full URL must be on the provider's origin or an allowed one.
+ */
+export function resolveStorageUrl(pathOrUrl: string, apiUrl: string, allowedOrigins: string[] = []): string {
+  const trimmed = pathOrUrl.trim();
+  if (!trimmed) throw new KalaghError('path is required', 400);
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) {
+    const key = trimmed.replace(/^\/+/, '').replace(/^storage\//, '');
+    return `${apiUrl}/storage/${key}`;
+  }
+  let url: URL;
+  try {
+    url = new URL(trimmed);
+  } catch {
+    throw new KalaghError(`Not a URL: ${trimmed}`, 400);
+  }
+  const allowed = new Set([new URL(apiUrl).origin, ...allowedOrigins]);
+  if (!allowed.has(url.origin)) {
+    throw new KalaghError(
+      `${url.origin} is not the provider (${new URL(apiUrl).origin}); add it to KALAGH_STORAGE_ORIGINS if it is the provider's object store`,
+      400,
+    );
+  }
+  return url.toString();
+}
+
+/**
+ * The name to save a download under: `filename*` (RFC 5987, percent-encoded)
+ * when present, else `filename` taken literally, else the URL's last segment.
+ * A malformed percent-escape keeps the raw text instead of failing a download
+ * that already arrived ("Discount 50%.pdf").
+ */
+export function filenameFrom(disposition: string | null, url: string): string {
+  const decode = (value: string): string => {
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return value;
+    }
+  };
+  const extended = /filename\*\s*=\s*(?:[\w-]+)?'[^']*'([^;]+)/i.exec(disposition ?? '')?.[1];
+  if (extended) return decode(extended.trim().replace(/^"|"$/g, '')) || 'download';
+  const plain = /filename\s*=\s*"([^"]*)"|filename\s*=\s*([^;]+)/i.exec(disposition ?? '');
+  const named = plain?.[1] ?? plain?.[2]?.trim();
+  if (named) return named;
+  return decode(basename(new URL(url).pathname)) || 'download';
 }

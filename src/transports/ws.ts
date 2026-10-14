@@ -8,13 +8,20 @@ type Ack = { success: boolean; data?: unknown; error?: string };
 
 /**
  * One Socket.IO connection, shared by the operations and the event stream.
- * The key goes in the handshake query, where the gateway's handleConnection
- * reads it; a wrong key is answered with an `error` event and a disconnect,
- * never an ack — so a refused handshake is surfaced from that event.
+ *
+ * The key rides the `x-api-key` header of the WebSocket upgrade — never the
+ * handshake query, which would write it into every proxy's access log on every
+ * reconnect. The gateway's handleConnection reads either. A wrong key is
+ * answered with an `error` event and a server-side disconnect, never an ack;
+ * socket.io does not reconnect after a server disconnect, so a refusal is
+ * final for this process and every later call reports it at once.
  */
 export class SocketConnection {
   private socket?: Socket;
+  /** Why the gateway refused this client (a wrong key), once it has. */
   refusal?: string;
+  /** The last transport-level failure to connect (DNS, TLS, refused port). */
+  private connectError?: string;
 
   constructor(private readonly config: Config) {}
 
@@ -22,7 +29,7 @@ export class SocketConnection {
     if (this.socket) return this.socket;
     const socket = io(this.config.wsUrl!, {
       transports: ['websocket'],
-      query: { apiKey: this.config.apiKey },
+      extraHeaders: { 'x-api-key': this.config.apiKey },
       reconnection: true,
       reconnectionDelayMax: 10_000,
     });
@@ -30,29 +37,39 @@ export class SocketConnection {
       this.refusal = typeof error === 'string' ? error : (error?.message ?? 'refused');
       console.error(`[kalagh-mcp] socket refused: ${this.refusal}`);
     });
+    socket.on('connect_error', (error: Error) => {
+      this.connectError = error.message;
+    });
     socket.on('connect', () => {
       this.refusal = undefined;
+      this.connectError = undefined;
     });
     this.socket = socket;
     return socket;
+  }
+
+  /** Why the socket is not usable, when it is not. */
+  why(): string | undefined {
+    return this.refusal ?? this.connectError;
   }
 
   /** Resolves once connected, or rejects with why it is not. */
   async ready(timeoutMs: number): Promise<Socket> {
     const socket = this.get();
     if (socket.connected) return socket;
+    if (this.refusal) throw this.refused();
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         cleanup();
-        reject(new KalaghError(`Socket.IO ${this.config.wsUrl} is not connected${this.refusal ? `: ${this.refusal}` : ''}`));
+        reject(new KalaghError(`Socket.IO ${this.config.wsUrl} is not connected${this.why() ? `: ${this.why()}` : ''}`, 503));
       }, Math.min(timeoutMs, 15_000));
       const onConnect = () => {
         cleanup();
         resolve(socket);
       };
-      const onError = (error: { message?: string } | string) => {
+      const onError = () => {
         cleanup();
-        reject(new KalaghError(`Socket.IO refused the connection: ${typeof error === 'string' ? error : error?.message}`, 401));
+        reject(this.refused());
       };
       const cleanup = () => {
         clearTimeout(timer);
@@ -62,6 +79,10 @@ export class SocketConnection {
       socket.on('connect', onConnect);
       socket.on('error', onError);
     });
+  }
+
+  refused(): KalaghError {
+    return new KalaghError(`Socket.IO ${this.config.wsUrl} refused this client: ${this.refusal ?? 'refused'} (check KALAGH_API_KEY)`, 401);
   }
 
   close(): void {
@@ -89,10 +110,22 @@ export class WsTransport implements Transport {
     if (!op.socketEvent) return this.http.call(op, args);
     const socket = await this.connection.ready(this.config.timeoutMs);
     let ack: Ack;
+    const started = Date.now();
     try {
       ack = (await socket.timeout(this.config.timeoutMs).emitWithAck(op.socketEvent, args)) as Ack;
-    } catch {
-      throw new KalaghError(`No answer to "${op.socketEvent}" within ${this.config.timeoutMs} ms`);
+    } catch (error) {
+      // The ack never came. Say why: a refusal the gateway sent meanwhile, a
+      // dropped connection, or — only when the wait really ran out — a timeout.
+      if (this.connection.refusal) throw this.connection.refused();
+      const elapsed = Date.now() - started;
+      const reason = error instanceof Error ? error.message : String(error);
+      const failure = !socket.connected
+        ? new KalaghError(`Socket.IO disconnected before answering "${op.socketEvent}"${this.connection.why() ? `: ${this.connection.why()}` : ''}`, 503)
+        : elapsed >= this.config.timeoutMs
+          ? new KalaghError(`No answer to "${op.socketEvent}" within ${this.config.timeoutMs} ms`, 504)
+          : new KalaghError(`"${op.socketEvent}" failed after ${elapsed} ms: ${reason}`);
+      failure.cause = error;
+      throw failure;
     }
     if (!ack || typeof ack !== 'object') throw new KalaghError(`Malformed ack for "${op.socketEvent}"`);
     if (!ack.success) throw new KalaghError(ack.error ?? 'Unknown error');
@@ -111,7 +144,7 @@ export class WsEventSource implements EventSource {
   constructor(private readonly connection: SocketConnection) {}
 
   get error(): string | undefined {
-    return this.connection.refusal;
+    return this.connection.why();
   }
 
   subscribe(onEvent: (event: ProviderEvent) => void): void {

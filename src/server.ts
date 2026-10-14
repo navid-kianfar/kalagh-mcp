@@ -20,7 +20,7 @@ How the API works:
 - A send names its recipient with EXACTLY ONE of chatId, contactId, phoneNumber (international, e.g. +989121234567) or username.
 - Lists: channels/contacts/chats/logs page with page+limit; messages_list, messages_attachments and messages_history are cursor-paged, newest first — pass the nextCursor you were given.
 - Unknown fields are rejected, never ignored.
-- Sending, replying, forwarding, reacting, editing, deleting, blocking and group membership changes reach REAL people and cannot be undone: state exactly what will be sent to whom and get the user's confirmation first.
+- Sending, replying, forwarding, reacting, editing, deleting, marking as read (the other side sees read receipts), blocking or unblocking, creating, renaming or changing a group, and repointing a channel's webhook or credentials all reach REAL people or redirect their data: state exactly what will happen and get the user's confirmation first.
 - messages_send_media uploads files from paths on the machine running this server.
 - Pairing a channel: channels_create (or channels_request_qr) returns a QR image to scan; events_recent with waitSeconds waits for it to connect.`;
 
@@ -159,6 +159,7 @@ async function status(deps: ServerDeps, operations: Operation[], byName: Map<str
       grpc: config.grpcUrl ? `${config.grpcUrl}${config.grpcTls ? ' (TLS)' : ' (plaintext)'}` : null,
     },
     readOnly: config.readOnly,
+    storageOrigins: [new URL(config.apiUrl).origin, ...config.storageOrigins],
     tools: operations.length,
     schemaSource: catalog.source,
     ...(catalog.liveError ? { liveDocumentError: catalog.liveError } : {}),

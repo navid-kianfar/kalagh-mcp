@@ -23,7 +23,7 @@ export interface LoadedCatalog {
  * reports the connection error.
  */
 export async function loadCatalog(config: Config): Promise<LoadedCatalog> {
-  const snapshot = JSON.parse(readFileSync(SNAPSHOT_OPENAPI, 'utf8'));
+  let liveError: string;
   try {
     const response = await fetch(`${config.apiUrl}/api/docs-json`, {
       headers: { 'x-api-key': config.apiKey },
@@ -32,10 +32,27 @@ export async function loadCatalog(config: Config): Promise<LoadedCatalog> {
     if (!response.ok) throw new Error(`GET /api/docs-json answered ${response.status}`);
     const live = await response.json();
     if (!hasSchemas(live)) throw new Error('the live document carries no schemas');
-    // An older provider's document has no summaries; the snapshot's fill them in.
-    return { operations: buildCatalog(live, summariesOf(snapshot)), source: 'live' };
+    // An older provider's document has no summaries; the snapshot's fill them
+    // in when it can be read — it is never needed for the tools themselves.
+    let summaries = new Map<string, string>();
+    try {
+      summaries = summariesOf(readSnapshot());
+    } catch (error) {
+      console.error(`[kalagh-mcp] bundled snapshot unreadable, summaries come from the live document only: ${reason(error)}`);
+    }
+    return { operations: buildCatalog(live, summaries), source: 'live' };
   } catch (error) {
-    const reason = error instanceof Error ? (error.cause instanceof Error ? error.cause.message : error.message) : String(error);
-    return { operations: buildCatalog(snapshot), source: 'snapshot', liveError: reason };
+    liveError = reason(error);
+  }
+  // Only the fallback needs the snapshot, so only the fallback reads it.
+  try {
+    return { operations: buildCatalog(readSnapshot()), source: 'snapshot', liveError };
+  } catch (error) {
+    throw new Error(`No tool schemas: the live document failed (${liveError}) and the bundled snapshot failed (${reason(error)})`);
   }
 }
+
+const readSnapshot = () => JSON.parse(readFileSync(SNAPSHOT_OPENAPI, 'utf8'));
+
+const reason = (error: unknown): string =>
+  error instanceof Error ? (error.cause instanceof Error ? error.cause.message : error.message) : String(error);

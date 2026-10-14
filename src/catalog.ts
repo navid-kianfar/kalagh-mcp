@@ -61,25 +61,102 @@ const BYTE_ROUTES = new Set(['contacts/get-avatar', 'chats/get-avatar', 'message
 /** Routes with no socket event (the provider's gateway documents why). */
 const NO_SOCKET_EVENT = new Set([...BYTE_ROUTES, 'messages/send-media']);
 
-/** The last path segments that only read. */
-const READ_VERBS = new Set([
-  'get', 'list', 'search', 'aliases', 'attachments', 'history',
-  'get-avatar', 'get-participants', 'get-media', 'download-media', 'webhooks',
-]);
-
 /**
- * Writes that are reversible or local to the provider. Every other write is
- * marked destructive: it deletes, logs out, or reaches people on the platform
- * (a send, a reaction, an edit, a block, a group membership change).
+ * What each route does, decided route by route — never guessed from its name.
+ *
+ *  - `read`        changes nothing anywhere. Listed in read-only mode.
+ *  - `write`       changes the provider's own state, or the account's own view
+ *                  of itself (archive, pin, mute, a history sync). Nobody else
+ *                  sees it.
+ *  - `destructive` deletes, logs out, redirects data, or reaches OTHER PEOPLE on
+ *                  the platform: a send, a reaction, an edit, a read receipt
+ *                  (blue ticks), a block or unblock, a group created, renamed or
+ *                  changed, a webhook or credentials repointed.
+ *
+ * A route missing from this table — a provider newer than this server — is
+ * treated as destructive and is never listed in read-only mode. The test
+ * suite fails when the bundled document has a route this table does not
+ * classify.
  */
-const NON_DESTRUCTIVE_WRITES = new Set([
-  'channels/create', 'channels/update', 'channels/credentials/patch', 'channels/restart',
-  'channels/unload', 'channels/request-qr',
-  'contacts/create', 'contacts/sync', 'contacts/unblock', 'contacts/update-status',
-  'chats/create', 'chats/update', 'chats/sync', 'chats/mute', 'chats/unmute',
-  'chats/archive', 'chats/unarchive', 'chats/pin', 'chats/unpin', 'chats/mark-as-read',
-  'messages/sync', 'messages/mark-as-read',
-]);
+export type Effect = 'read' | 'write' | 'destructive';
+
+export const ROUTE_EFFECTS: Readonly<Record<string, Effect>> = {
+  health: 'read',
+  info: 'read',
+
+  'channels/get': 'read',
+  'channels/list': 'read',
+  'channels/aliases': 'read',
+  'channels/create': 'write',
+  'channels/request-qr': 'write',
+  'channels/restart': 'write',
+  'channels/unload': 'write',
+  // webhookUrl and credentials: one call can send every inbound message elsewhere.
+  'channels/update': 'destructive',
+  'channels/credentials/patch': 'destructive',
+  'channels/terminate': 'destructive',
+  'channels/delete': 'destructive',
+
+  'contacts/get': 'read',
+  'contacts/list': 'read',
+  'contacts/search': 'read',
+  'contacts/get-avatar': 'read',
+  'contacts/create': 'write',
+  'contacts/sync': 'write',
+  'contacts/update-status': 'write',
+  'contacts/delete': 'destructive',
+  'contacts/block': 'destructive',
+  'contacts/unblock': 'destructive',
+
+  'chats/get': 'read',
+  'chats/list': 'read',
+  'chats/search': 'read',
+  'chats/get-avatar': 'read',
+  'chats/get-participants': 'read',
+  'chats/sync': 'write',
+  'chats/mute': 'write',
+  'chats/unmute': 'write',
+  'chats/archive': 'write',
+  'chats/unarchive': 'write',
+  'chats/pin': 'write',
+  'chats/unpin': 'write',
+  // A WhatsApp group is created on the platform with real participants in it.
+  'chats/create': 'destructive',
+  // Renames the group for every participant.
+  'chats/update': 'destructive',
+  'chats/delete': 'destructive',
+  'chats/add-participant': 'destructive',
+  'chats/remove-participant': 'destructive',
+  // Read receipts: the other side sees blue ticks.
+  'chats/mark-as-read': 'destructive',
+
+  'messages/get': 'read',
+  'messages/list': 'read',
+  'messages/search': 'read',
+  'messages/attachments': 'read',
+  'messages/history': 'read',
+  'messages/get-media': 'read',
+  'messages/sync': 'write',
+  'messages/send': 'destructive',
+  'messages/send-media': 'destructive',
+  'messages/send-location': 'destructive',
+  'messages/send-contact': 'destructive',
+  'messages/send-poll': 'destructive',
+  'messages/send-event': 'destructive',
+  'messages/send-interactive': 'destructive',
+  'messages/reply': 'destructive',
+  'messages/forward': 'destructive',
+  'messages/react': 'destructive',
+  'messages/remove-reaction': 'destructive',
+  'messages/update': 'destructive',
+  'messages/delete': 'destructive',
+  'messages/mark-as-read': 'destructive',
+
+  'logs/list': 'read',
+  'logs/webhooks': 'read',
+};
+
+export const effectOf = (path: string): Effect => ROUTE_EFFECTS[path] ?? 'destructive';
 
 export const toolName = (path: string): string => path.replace(/[/-]/g, '_');
 
@@ -149,7 +226,7 @@ function describe(op: Omit<Operation, 'summary' | 'inputSchema'>, summary: strin
     op.socketEvent && `socket "${op.socketEvent}"`,
   ].filter(Boolean);
   const notes: string[] = [];
-  if (op.destructive) notes.push('Acts on the real platform account and cannot be undone — confirm with the user first.');
+  if (op.destructive) notes.push('Reaches other people on the platform, deletes, or redirects data — say exactly what will happen and get the user’s confirmation first.');
   if (op.bytes) {
     notes.push('The file is saved locally and its path returned (images are also shown). gRPC answers the bytes in-band; on REST/socket media is fetched from the provider’s storage, and an avatar needs KALAGH_TRANSPORT=grpc.');
   }
@@ -187,7 +264,8 @@ export function buildCatalog(document: OpenApiDocument, fallbackSummaries: Map<s
 
     const summary = operation.summary || fallbackSummaries.get(path) || path;
     if (get && !post) {
-      const op = { name: toolName(path), path, kind: 'probe' as const, bytes: false, readOnly: true, destructive: false };
+      const effect = effectOf(path);
+      const op = { name: toolName(path), path, kind: 'probe' as const, bytes: false, readOnly: effect === 'read', destructive: effect === 'destructive' };
       operations.push({ ...op, summary: describe(op, summary), inputSchema: { type: 'object', properties: {} } });
       continue;
     }
@@ -195,8 +273,7 @@ export function buildCatalog(document: OpenApiDocument, fallbackSummaries: Map<s
     const content = operation.requestBody?.content ?? {};
     const bodySchema = (content['application/json'] ?? content['multipart/form-data'])?.schema;
     const resolved = bodySchema ? (dereference(bodySchema, components) as JsonSchema) : undefined;
-    const verb = path.split('/').pop()!;
-    const readOnly = READ_VERBS.has(verb);
+    const effect = effectOf(path);
     const kind = path === 'messages/send-media' ? ('upload' as const) : ('json' as const);
     const op = {
       name: toolName(path),
@@ -205,8 +282,8 @@ export function buildCatalog(document: OpenApiDocument, fallbackSummaries: Map<s
       rpc: rpcName(operation.operationId),
       socketEvent: NO_SOCKET_EVENT.has(path) ? undefined : path,
       bytes: BYTE_ROUTES.has(path),
-      readOnly,
-      destructive: !readOnly && !NON_DESTRUCTIVE_WRITES.has(path),
+      readOnly: effect === 'read',
+      destructive: effect === 'destructive',
     };
     operations.push({
       ...op,

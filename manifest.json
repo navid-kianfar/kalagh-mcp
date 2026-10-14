@@ -5,17 +5,26 @@
   "display_name": "Kalagh Provider",
   "version": "1.0.0",
   "description": "Drive a Kalagh messaging provider — channels, contacts, chats, messages and media — over REST, Socket.IO or gRPC.",
-  "long_description": "Every operation of a Kalagh provider (WhatsApp, Telegram, Instagram, email, …) as a tool. The tools are generated from the provider's own OpenAPI document, so they always match the provider you connect to. Pick REST, Socket.IO or gRPC as the transport. With a socket or gRPC endpoint configured, the provider's live events are buffered and readable through the events_recent tool. Sends and deletions are marked destructive, and read-only mode hides every tool that changes anything.",
+  "long_description": "Every operation of a Kalagh provider (WhatsApp, Telegram, Instagram, email, …) as a tool. The tools are generated from the provider's own OpenAPI document, so they always match the provider you connect to. Pick REST, Socket.IO or gRPC as the transport. With a socket or gRPC endpoint configured, the provider's live events are buffered and readable through the events_recent tool. Anything that reaches other people (sends, reactions, edits, read receipts, blocks, group changes) or deletes or redirects data is marked destructive, and read-only mode hides every tool that changes anything.",
   "author": {
     "name": "AchaSoft"
   },
-  "keywords": ["kalagh", "whatsapp", "messaging", "omnichannel", "grpc", "socket.io"],
+  "keywords": [
+    "kalagh",
+    "whatsapp",
+    "messaging",
+    "omnichannel",
+    "grpc",
+    "socket.io"
+  ],
   "server": {
     "type": "node",
     "entry_point": "server/index.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/server/index.js"],
+      "args": [
+        "${__dirname}/server/index.js"
+      ],
       "env": {
         "KALAGH_API_URL": "${user_config.api_url}",
         "KALAGH_API_KEY": "${user_config.api_key}",
@@ -23,7 +32,8 @@
         "KALAGH_WS_URL": "${user_config.ws_url}",
         "KALAGH_GRPC_URL": "${user_config.grpc_url}",
         "KALAGH_READ_ONLY": "${user_config.read_only}",
-        "KALAGH_DOWNLOAD_DIR": "${user_config.download_dir}"
+        "KALAGH_DOWNLOAD_DIR": "${user_config.download_dir}",
+        "KALAGH_STORAGE_ORIGINS": "${user_config.storage_origins}"
       }
     }
   },
@@ -60,7 +70,7 @@
     "grpc_url": {
       "type": "string",
       "title": "gRPC address",
-      "description": "host:port, e.g. kalagh-grpc.smg.tr:443 (TLS is used on port 443). Needed for the grpc transport.",
+      "description": "host:port, e.g. kalagh-grpc.smg.tr:443. Needed for the grpc transport. TLS is always used, except for localhost; prefix grpc:// to force plaintext.",
       "default": "kalagh-grpc.smg.tr:443",
       "required": false
     },
@@ -71,6 +81,12 @@
       "default": false,
       "required": false
     },
+    "storage_origins": {
+      "type": "string",
+      "title": "Extra storage origins",
+      "description": "Comma-separated origins storage_get may download from besides the provider, e.g. the object store behind presigned attachment links (https://files.example.com). Leave empty to allow only the provider.",
+      "required": false
+    },
     "download_dir": {
       "type": "directory",
       "title": "Download folder",
@@ -79,7 +95,11 @@
     }
   },
   "compatibility": {
-    "platforms": ["darwin", "win32", "linux"],
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
     "runtimes": {
       "node": ">=20.0.0"
     }

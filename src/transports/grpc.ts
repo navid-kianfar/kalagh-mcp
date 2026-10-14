@@ -47,7 +47,8 @@ const FLOAT_TYPES = new Set(['TYPE_DOUBLE', 'TYPE_FLOAT']);
  *  - a free-form object the proto carries as a JSON STRING
  *    (`channels/credentials/patch.credentials`, every `metadata`) is
  *    stringified;
- *  - a `map<string,string>` value that is not a string is stringified.
+ *  - a `map<string,string>` value must already be a string; any other value
+ *    is a gap (below), because the provider stores map values as given.
  *
  * A field the proto does not declare is never dropped: silently losing it on
  * one transport would make the same call mean something else there. The
@@ -103,11 +104,18 @@ export class ProtoShaper {
       if (target.options?.mapEntry) {
         if (typeof value !== 'object' || Array.isArray(value)) throw new KalaghError(`${path}: expected an object`, 400);
         const valueField = target.field.find((f) => f.name === 'value')!;
-        return Object.fromEntries(
-          Object.entries(value as Record<string, unknown>)
-            .filter(([, v]) => v !== undefined && v !== null)
-            .map(([k, v]) => [k, this.field(valueField, v, target, `${path}.${k}`)]),
-        );
+        const entries = Object.entries(value as Record<string, unknown>).filter(([, v]) => v !== undefined && v !== null);
+        // A map<string,string> cannot hold a number, a boolean, a list or an
+        // object, and the provider does not parse its values back — so over
+        // gRPC `{"tags":["a"]}` would be stored as the STRING '["a"]' while REST
+        // stores the array. Not the same call, so it is a gap: it goes over REST.
+        if (valueField.type === 'TYPE_STRING') {
+          const typed = entries.filter(([, v]) => typeof v !== 'string').map(([k]) => `${path}.${k}`);
+          if (typed.length) {
+            throw new ProtoGapError(`${typed.join(', ')}: map<string,string> carries strings only`, typed);
+          }
+        }
+        return Object.fromEntries(entries.map(([k, v]) => [k, this.field(valueField, v, target, `${path}.${k}`)]));
       }
       if (field.label === 'LABEL_REPEATED') {
         if (!Array.isArray(value)) throw new KalaghError(`${path}: expected an array`, 400);
