@@ -122,10 +122,11 @@ const hasBytes = (value: Record<string, unknown>): boolean =>
   Object.values(value).some((item) => item instanceof Uint8Array && item.length > 0);
 
 /**
- * A media answer that names where its bytes are stored but does not carry
- * them — REST and Socket.IO never do, and an older provider's gRPC answers
- * empty bytes — gets them fetched from `GET /storage/{storagePath}`, so the
- * caller ends up with a file on every transport.
+ * A file answer that names where its bytes are stored but does not carry them
+ * — the REST/Socket.IO descriptor `{ mimeType, filename?, storagePath, url }`,
+ * or an older provider's `{ stream, storagePath }` — gets them fetched from
+ * `GET /storage/{storagePath}`, so the caller ends up with a file on every
+ * transport.
  */
 export async function withStoredBytes(result: unknown, http: HttpTransport): Promise<unknown> {
   if (!result || typeof result !== 'object' || Array.isArray(result)) return result;
@@ -134,7 +135,10 @@ export async function withStoredBytes(result: unknown, http: HttpTransport): Pro
   if (!storagePath || hasBytes(record)) return result;
   const { stream: _stream, ...rest } = record;
   try {
-    return { ...rest, file: await http.download(storagePath) };
+    const file = await http.download(storagePath);
+    // The descriptor's own name beats the storage key's last segment.
+    if (typeof record.filename === 'string' && record.filename) file.filename = record.filename;
+    return { ...rest, file };
   } catch (error) {
     return { ...rest, fileError: error instanceof Error ? error.message : String(error) };
   }

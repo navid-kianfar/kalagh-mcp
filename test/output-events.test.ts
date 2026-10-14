@@ -52,7 +52,7 @@ test('waitSeconds resolves on the next matching event', async () => {
   assert.ok(Date.now() - started < 2000);
 });
 
-test('a media answer naming its storagePath gets the stored file', async () => {
+test('a file descriptor (or an old stream answer) naming its storagePath gets the stored file', async () => {
   const { withStoredBytes } = await import('../src/server.js');
   const requested: string[] = [];
   const http = {
@@ -62,10 +62,11 @@ test('a media answer naming its storagePath gets the stored file', async () => {
     },
   } as unknown as import('../src/transports/http.js').HttpTransport;
 
-  const fetched = (await withStoredBytes({ stream: { _readableState: {} }, mimeType: 'image/jpeg', storagePath: 'media/c/x/p.jpg' }, http)) as Record<string, unknown>;
+  const fetched = (await withStoredBytes({ stream: { _readableState: {} }, mimeType: 'image/jpeg', filename: 'Holiday.jpg', storagePath: 'media/c/x/p.jpg' }, http)) as Record<string, unknown>;
   assert.deepEqual(requested, ['media/c/x/p.jpg']);
   assert.equal('stream' in fetched, false, 'the serialised stream is dropped');
   assert.equal((fetched.file as { bytes: Buffer }).bytes.toString(), 'jpeg');
+  assert.equal((fetched.file as { filename: string }).filename, 'Holiday.jpg', 'the descriptor names the file');
 
   const inBand = { mediaData: Buffer.from('x'), storagePath: 'media/c/x/p.jpg' };
   assert.equal(await withStoredBytes(inBand, http), inBand, 'bytes already in the answer are not fetched again');

@@ -125,7 +125,7 @@ Special handling:
 | --- | --- |
 | `messages_send_media` | Takes **local file paths** (`files: [{ path, filename?, mimeType? }]`) and uploads them as one message, via REST multipart on every transport. |
 | `channels_create`, `channels_request_qr` | The pairing QR comes back as an **image** the client shows, ready to scan. |
-| `messages_get_media`, `contacts_get_avatar`, `chats_get_avatar` | The file is saved to the download folder and its path is returned; images are also shown inline. gRPC answers the bytes in-band. On REST/socket, media is fetched from the provider's storage, and an avatar needs gRPC. |
+| `messages_get_media`, `contacts_get_avatar`, `chats_get_avatar` | The file is saved to the download folder and its path is returned; images are also shown inline. gRPC answers the bytes in-band. REST answers a descriptor `{ mimeType, filename, storagePath, url }`, and the server downloads the file from `/storage` for you. |
 | `storage_get` | Downloads a stored object, from a `/storage/...` path or an attachment's URL. |
 | `events_recent` | The provider events received since the server started (needs `KALAGH_WS_URL` or `KALAGH_GRPC_URL`). `afterSeq` reads only newer ones, and `waitSeconds` waits for the next match, e.g. a channel connecting after its QR is scanned. |
 | `status` | Transport, endpoints, where the schemas came from, the event subscription, and the provider's health and info. |
@@ -137,8 +137,7 @@ Special handling:
 | Operations | `POST /api/kalagh/<path>` | event `<path>` + ack | rpc on `kalagh.KalaghService` |
 | `health`, `info`, `storage_get` | ✓ | via REST | via REST |
 | `messages_send_media` | multipart | via REST | via REST |
-| Media bytes | via `/storage` | via `/storage` | in-band |
-| Avatar bytes | — | — | in-band |
+| Media and avatar bytes | descriptor, then `/storage` | via REST (descriptor, then `/storage`) | in-band |
 | Events | — | `event` broadcast | `StreamEvents` |
 
 On gRPC, arguments are shaped onto the proto from the proto itself: free-form objects

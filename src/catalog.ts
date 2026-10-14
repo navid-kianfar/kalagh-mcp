@@ -55,10 +55,21 @@ const REST_PREFIX = '/api/kalagh/';
 /** Aliases kept on the provider for old callers; each has a canonical twin in the catalog. */
 const ALIASES = new Set(['messages/sync-chat', 'messages/download-media', 'messages/mark-messages-as-read']);
 
-/** Routes whose answer is bytes. Over REST and Socket.IO the provider cannot return them. */
+/**
+ * Routes whose answer is a file. gRPC answers its bytes; REST and Socket.IO
+ * answer a descriptor `{ mimeType, filename?, storagePath, url }`, and the
+ * bytes are fetched from `GET /storage/{storagePath}`.
+ */
 const BYTE_ROUTES = new Set(['contacts/get-avatar', 'chats/get-avatar', 'messages/get-media', 'messages/download-media']);
 
-/** Routes with no socket event (the provider's gateway documents why). */
+/**
+ * Routes the ws transport sends over REST instead of the socket.
+ *  - messages/send-media: a multipart upload; the gateway has no event for it.
+ *  - the file routes: the gateway gained events for them in kalagh 124c3f1de,
+ *    but a gateway older than that has none and a socket.io server never acks
+ *    an unknown event — the call would hang until the timeout. REST answers the
+ *    same descriptor on every provider version.
+ */
 const NO_SOCKET_EVENT = new Set([...BYTE_ROUTES, 'messages/send-media']);
 
 /**
@@ -232,7 +243,7 @@ function describe(op: Omit<Operation, 'summary' | 'inputSchema'>, summary: strin
   const notes: string[] = [];
   if (op.destructive) notes.push('Reaches other people on the platform, deletes, or redirects data — say exactly what will happen and get the user’s confirmation first.');
   if (op.bytes) {
-    notes.push('The file is saved locally and its path returned (images are also shown). gRPC answers the bytes in-band; on REST/socket media is fetched from the provider’s storage, and an avatar needs KALAGH_TRANSPORT=grpc.');
+    notes.push('The file is saved locally and its path returned (images are also shown). gRPC answers the bytes in-band; on REST/socket they are fetched from the provider’s storage.');
   }
   return [summary, ...notes, `(${carriers.join(' · ')})`].join('\n');
 }

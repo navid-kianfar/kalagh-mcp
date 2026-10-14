@@ -10,7 +10,7 @@ export type Content =
 const INLINE_IMAGE_LIMIT = 4 * 1024 * 1024;
 
 const STREAM_NOTE =
-  '[a byte stream this transport cannot carry — use KALAGH_TRANSPORT=grpc for the bytes in-band, or download a media attachment’s url with storage_get]';
+  '[a byte stream an older provider serialised into JSON — download the answer’s storagePath with storage_get, or use KALAGH_TRANSPORT=grpc]';
 
 const isDownload = (value: unknown): value is Download =>
   !!value && typeof value === 'object' && (value as { kind?: unknown }).kind === 'download' && Buffer.isBuffer((value as Download).bytes);
