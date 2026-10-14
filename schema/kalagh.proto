@@ -207,7 +207,12 @@ message CreateContactResponse {
 message UpdateContactRequest {
   string channelId = 1;
   string contactId = 2;
+  // The display name to store. `publicName` is what REST, the socket and the
+  // facade call it; `name` is this message's original spelling and is kept so a
+  // client generated before UpdateContact was implemented still compiles.
+  // `publicName` wins when both are sent.
   string name = 3;
+  string publicName = 4;
 }
 
 message UpdateContactResponse {
@@ -548,8 +553,8 @@ message Message {
   // Declared from the start and NEVER POPULATED — the row this response is built
   // from has no `senderId` property. Left in place because removing a field from
   // a published interface breaks a client we cannot see; use `senderPlatformId`
-  // (field 24) instead.
-  string senderId = 4;
+  // (field 24) instead. Marked deprecated so generated clients say so.
+  string senderId = 4 [deprecated = true];
   // ATTRIBUTION, NOT IDENTITY: the sender's display name, from the row's
   // `sender_name`. Set for a group, supergroup or channel sender — who has a
   // name on their bubble and no contact row anywhere — and empty in a private

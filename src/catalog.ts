@@ -104,6 +104,10 @@ export const ROUTE_EFFECTS: Readonly<Record<string, Effect>> = {
   'contacts/create': 'write',
   'contacts/sync': 'write',
   'contacts/update-status': 'write',
+  // A LOCAL rename of the stored contact: the provider tells the platform
+  // nothing (WhatsApp has no rename for somebody else's contact), so nobody on
+  // the other side sees it.
+  'contacts/update': 'write',
   'contacts/delete': 'destructive',
   'contacts/block': 'destructive',
   'contacts/unblock': 'destructive',

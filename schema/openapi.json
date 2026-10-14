@@ -7,7 +7,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Liveness probe — no authentication required",
@@ -23,7 +30,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderInfoResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Which platform this provider instance serves",
@@ -49,7 +63,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateChannelResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Create a channel and return its first QR code / state",
@@ -74,7 +95,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetChannelResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "One channel by row id or by the connected account id",
@@ -99,7 +127,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPlatformAliasesResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "The identity pairings this channel observed (e.g. WhatsApp LID ↔ phone JID)",
@@ -124,7 +159,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetChannelsResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "A page of channels",
@@ -149,7 +191,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateChannelResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Change a channel’s title, webhook, event and logging settings",
@@ -174,7 +223,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchChannelCredentialsResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Deep-merge fields into a channel’s stored credentials",
@@ -199,7 +255,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Delete a channel and everything that hangs off it",
@@ -224,7 +287,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Log the channel out of the platform (pairing is dropped)",
@@ -249,7 +319,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Reconnect the channel’s session, keeping its pairing",
@@ -274,7 +351,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Drop the channel’s session from memory without logging out",
@@ -299,7 +383,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestQRCodeResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "A fresh login QR code for a channel awaiting pairing",
@@ -324,7 +415,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetContactResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "One contact by row id, or by platform id within a channel",
@@ -349,7 +447,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetContactsResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "A page of a channel’s contacts",
@@ -374,7 +479,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactDto"
+                }
+              }
+            }
           }
         },
         "summary": "Create a contact from a name and phone number",
@@ -399,7 +511,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Soft-delete a contact",
@@ -424,7 +543,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncContactsResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Import the platform’s address book for a channel",
@@ -449,10 +575,17 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "The stored avatar, or null when there is none",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaDescriptorDto"
+                }
+              }
+            }
           }
         },
-        "summary": "A contact’s avatar; the bytes are served from GET /storage/*",
+        "summary": "A contact’s avatar, described; the bytes are served from GET /storage/*",
         "tags": [
           "Contacts"
         ]
@@ -474,7 +607,17 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactDto"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search a channel’s contacts by name or number",
@@ -499,7 +642,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Block a contact on the platform",
@@ -524,7 +674,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Unblock a contact on the platform",
@@ -549,10 +706,49 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactDto"
+                }
+              }
+            }
           }
         },
         "summary": "Store a contact’s status / about text",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/update": {
+      "post": {
+        "operationId": "ApiController_updateContact",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Rename a contact in the provider’s own records",
         "tags": [
           "Contacts"
         ]
@@ -574,7 +770,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetChatResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "One chat by row id, or by platform id within a channel",
@@ -599,7 +802,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetChatsResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "A page of a channel’s chats",
@@ -624,7 +834,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatDto"
+                }
+              }
+            }
           }
         },
         "summary": "Create a chat (a group, where the platform has them)",
@@ -649,7 +866,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateChatResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Rename a chat",
@@ -674,7 +898,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Soft-delete a chat",
@@ -699,7 +930,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncChatsResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Import the platform’s chat list for a channel",
@@ -724,10 +962,17 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "The stored avatar, or null when there is none",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaDescriptorDto"
+                }
+              }
+            }
           }
         },
-        "summary": "A chat’s avatar; the bytes are served from GET /storage/*",
+        "summary": "A chat’s avatar, described; the bytes are served from GET /storage/*",
         "tags": [
           "Chats"
         ]
@@ -749,7 +994,17 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatParticipantDto"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "The stored participants of a chat",
@@ -774,7 +1029,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Add a participant to a chat",
@@ -799,7 +1061,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Remove a participant from a chat",
@@ -824,7 +1093,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Mute a chat",
@@ -849,7 +1125,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Unmute a chat",
@@ -874,7 +1157,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Archive a chat",
@@ -899,7 +1189,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Unarchive a chat",
@@ -924,7 +1221,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Pin a chat",
@@ -949,7 +1253,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Unpin a chat",
@@ -974,7 +1285,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Mark a whole chat as read",
@@ -999,7 +1317,17 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatDto"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search a channel’s chats by name",
@@ -1024,7 +1352,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "One message by row id, or by platform id within a channel",
@@ -1049,7 +1384,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMessagesResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "A cursor page of a chat’s messages",
@@ -1074,7 +1416,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMessageAttachmentsResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "A cursor page of a chat’s file-bearing messages",
@@ -1099,7 +1448,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Send a message carrying a whole MessageContent",
@@ -1124,7 +1480,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Send a location (or a venue, when name/address are given)",
@@ -1149,7 +1512,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Send a contact card (vCard)",
@@ -1174,7 +1544,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Send a poll — question plus 2..12 options",
@@ -1199,7 +1576,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Send a scheduled event",
@@ -1224,7 +1608,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Send quick-reply buttons and/or a structured list",
@@ -1249,7 +1640,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Edit a sent message’s text",
@@ -1274,7 +1672,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Delete a message for everyone",
@@ -1299,7 +1704,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncMessagesResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Pull a page of a chat’s history from the platform",
@@ -1324,7 +1736,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncMessagesResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Alias of messages/sync, kept for existing callers",
@@ -1349,7 +1768,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Reply to a message, quoting it",
@@ -1374,7 +1800,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForwardMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Forward a message to one or more chats",
@@ -1399,7 +1832,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "React to a message with an emoji",
@@ -1424,7 +1864,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Remove a reaction from a message",
@@ -1449,7 +1896,17 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessageDto"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search a channel’s messages, optionally within one chat",
@@ -1474,7 +1931,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "The stored media, or null when there is none",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaDescriptorDto"
+                }
+              }
+            }
           }
         },
         "summary": "Fetch a message’s media into provider storage and describe it",
@@ -1499,7 +1963,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "The stored media, or null when there is none",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaDescriptorDto"
+                }
+              }
+            }
           }
         },
         "summary": "Alias of messages/get-media, kept for existing callers",
@@ -1524,7 +1995,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Mark one message — and the chat up to it — as read",
@@ -1549,7 +2027,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Alias of messages/mark-as-read, kept for existing callers",
@@ -1574,7 +2059,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMessagesResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "A page of stored messages before a given one — never starts a fetch",
@@ -1649,7 +2141,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Send a message carrying one or more uploaded files",
@@ -1674,7 +2173,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLogsResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "A page of a channel’s activity log",
@@ -1699,7 +2205,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWebhookLogsResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "A page of a channel’s webhook delivery log",
@@ -1724,7 +2237,15 @@
         ],
         "responses": {
           "200": {
-            "description": "The file’s bytes, with its own content type"
+            "description": "The file’s bytes. The content type is the FILE’s own, not this declaration: a stored object can be any media type, so the schema is binary and the response header names the real one.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
           }
         },
         "summary": "Serve a stored file’s bytes (public — no api key, downloads on demand)",
@@ -1752,6 +2273,59 @@
       }
     },
     "schemas": {
+      "HealthResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:31:00.000Z"
+          }
+        },
+        "required": [
+          "status",
+          "timestamp"
+        ]
+      },
+      "ProviderInfoResponseDto": {
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "description": "The platform this instance speaks to",
+            "example": 2
+          },
+          "platformName": {
+            "type": "string",
+            "description": "That platform’s name, for a label",
+            "example": "WhatsappPersonal"
+          }
+        },
+        "required": [
+          "platform",
+          "platformName"
+        ]
+      },
       "CreateChannelDto": {
         "type": "object",
         "properties": {
@@ -1794,6 +2368,41 @@
           "title"
         ]
       },
+      "CreateChannelResponseDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "qrCode": {
+            "type": "string",
+            "nullable": true,
+            "description": "The first pairing QR as a data-URL, or null for a platform that does not pair by QR",
+            "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg=="
+          },
+          "state": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "example": 3
+          }
+        },
+        "required": [
+          "channelId",
+          "qrCode",
+          "state"
+        ]
+      },
       "GetChannelDto": {
         "type": "object",
         "properties": {
@@ -1809,6 +2418,213 @@
           }
         }
       },
+      "ChannelStatsDto": {
+        "type": "object",
+        "properties": {
+          "chats": {
+            "type": "number",
+            "example": 42
+          },
+          "contacts": {
+            "type": "number",
+            "example": 311
+          },
+          "messages": {
+            "type": "number",
+            "example": 8710
+          },
+          "unreadMessages": {
+            "type": "number",
+            "example": 7
+          }
+        },
+        "required": [
+          "chats",
+          "contacts",
+          "messages"
+        ]
+      },
+      "ChannelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The provider’s own row id",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The account this channel is connected AS (its own JID / user id); empty until paired",
+            "example": "989121230000@s.whatsapp.net"
+          },
+          "platform": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "example": 2
+          },
+          "title": {
+            "type": "string",
+            "example": "My WhatsApp Line"
+          },
+          "state": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "description": "Open (6) is connected; AuthenticateRequired (3) is waiting for a QR scan",
+            "example": 6
+          },
+          "webhookUrl": {
+            "type": "string",
+            "example": "https://example.com/webhooks/kalagh"
+          },
+          "raiseEvents": {
+            "type": "boolean",
+            "description": "Publish events for this channel onto the queue",
+            "example": true
+          },
+          "logWebhook": {
+            "type": "boolean",
+            "description": "Record every webhook delivery in the webhook log",
+            "example": true
+          },
+          "logLevel": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "example": 0
+          },
+          "qrCode": {
+            "type": "string",
+            "description": "The pairing QR as a data-URL, while one is outstanding",
+            "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg=="
+          },
+          "qrCodeExpiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Free-form labels on the channel",
+            "example": {
+              "team": "support"
+            }
+          },
+          "clusterNodeId": {
+            "type": "string",
+            "description": "Which node of a provider cluster holds the session",
+            "example": "provider-1"
+          },
+          "providerIcon": {
+            "type": "string",
+            "example": "whatsapp"
+          },
+          "providerColor": {
+            "type": "string",
+            "example": "#25D366"
+          },
+          "contactSyncAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:31:00.000Z"
+          },
+          "chatSyncAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:31:00.000Z"
+          },
+          "messageSyncAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:31:00.000Z"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:31:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "lastActivityAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true
+          },
+          "syncHistory": {
+            "type": "boolean",
+            "description": "Import existing chats and messages from the platform",
+            "example": true
+          },
+          "config": {
+            "type": "object",
+            "description": "Per-platform settings. Secret-named keys are sealed at rest and never answered.",
+            "example": {
+              "ownNumber": "989121234567"
+            }
+          },
+          "stats": {
+            "$ref": "#/components/schemas/ChannelStatsDto"
+          }
+        },
+        "required": [
+          "id",
+          "platformId",
+          "platform",
+          "title",
+          "state",
+          "raiseEvents",
+          "logWebhook",
+          "logLevel",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "GetChannelResponseDto": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "$ref": "#/components/schemas/ChannelDto"
+          }
+        },
+        "required": [
+          "channel"
+        ]
+      },
       "GetPlatformAliasesDto": {
         "type": "object",
         "properties": {
@@ -1819,6 +2635,54 @@
         },
         "required": [
           "channelId"
+        ]
+      },
+      "PlatformAliasDto": {
+        "type": "object",
+        "properties": {
+          "platformId": {
+            "type": "string",
+            "description": "The identifier the platform treats as primary",
+            "example": "989121234567@s.whatsapp.net"
+          },
+          "altPlatformId": {
+            "type": "string",
+            "description": "The second identifier for the same human",
+            "example": "81234567890123@lid"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "contact",
+              "chat"
+            ],
+            "description": "Where the platform asserted the pairing",
+            "example": "contact"
+          }
+        },
+        "required": [
+          "platformId",
+          "altPlatformId",
+          "source"
+        ]
+      },
+      "GetPlatformAliasesResponseDto": {
+        "type": "object",
+        "properties": {
+          "aliases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlatformAliasDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 17
+          }
+        },
+        "required": [
+          "aliases",
+          "total"
         ]
       },
       "GetChannelsDto": {
@@ -1833,6 +2697,26 @@
             "example": 50
           }
         }
+      },
+      "GetChannelsResponseDto": {
+        "type": "object",
+        "properties": {
+          "channels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChannelDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "How many channels exist, not how many this page holds",
+            "example": 3
+          }
+        },
+        "required": [
+          "channels",
+          "total"
+        ]
       },
       "UpdateChannelDto": {
         "type": "object",
@@ -1882,6 +2766,18 @@
           "id"
         ]
       },
+      "UpdateChannelResponseDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          }
+        },
+        "required": [
+          "channelId"
+        ]
+      },
       "PatchChannelCredentialsDto": {
         "type": "object",
         "properties": {
@@ -1902,6 +2798,24 @@
           "credentials"
         ]
       },
+      "PatchChannelCredentialsResponseDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "sessionUpdated": {
+            "type": "boolean",
+            "description": "A running session took the change now; otherwise it applies on the next connect",
+            "example": true
+          }
+        },
+        "required": [
+          "channelId",
+          "sessionUpdated"
+        ]
+      },
       "DeleteChannelDto": {
         "type": "object",
         "properties": {
@@ -1912,6 +2826,19 @@
         },
         "required": [
           "id"
+        ]
+      },
+      "SuccessResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "The action was carried out",
+            "example": true
+          }
+        },
+        "required": [
+          "success"
         ]
       },
       "TerminateChannelDto": {
@@ -1962,6 +2889,41 @@
           "id"
         ]
       },
+      "RequestQRCodeResponseDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "qrCode": {
+            "type": "string",
+            "nullable": true,
+            "description": "A fresh QR, or null when the channel is not awaiting pairing",
+            "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg=="
+          },
+          "state": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "example": 3
+          }
+        },
+        "required": [
+          "channelId",
+          "qrCode",
+          "state"
+        ]
+      },
       "GetContactDto": {
         "type": "object",
         "properties": {
@@ -1982,6 +2944,148 @@
           }
         }
       },
+      "ContactDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The provider’s own row id",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The platform’s id for this person",
+            "example": "989121234567@s.whatsapp.net"
+          },
+          "altPlatformId": {
+            "type": "string",
+            "description": "The platform’s second id for the same person (a WhatsApp privacy LID)",
+            "example": "81234567890123@lid"
+          },
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "publicName": {
+            "type": "string",
+            "description": "The display name (pushName / first+last)",
+            "example": "John Doe"
+          },
+          "storedName": {
+            "type": "string",
+            "description": "The address-book name, when it differs",
+            "example": "John (Acme)"
+          },
+          "username": {
+            "type": "string",
+            "description": "The platform handle, where it has one",
+            "example": "johndoe"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "example": "/storage/20261011-0931-0c28-7f3a-000000000045/avatars/contact/989121234567.jpg"
+          },
+          "hasAvatar": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether the platform has an avatar for them; null while unknown",
+            "example": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+989121234567"
+          },
+          "email": {
+            "type": "string",
+            "description": "Set where the platform knows one",
+            "example": "john@example.com"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:31:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Set once soft-deleted",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "lastOnlineAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "example": 2
+          },
+          "customStatus": {
+            "type": "string",
+            "description": "The “about” text the platform reports",
+            "example": "At the office"
+          },
+          "isBlocked": {
+            "type": "boolean",
+            "example": false
+          },
+          "isVerified": {
+            "type": "boolean",
+            "example": false
+          },
+          "metadata": {
+            "type": "object",
+            "example": {
+              "department": "sales"
+            }
+          },
+          "tags": {
+            "example": [
+              "vip"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string",
+            "example": "Prefers calls after 18:00"
+          }
+        },
+        "required": [
+          "id",
+          "platformId",
+          "channelId",
+          "publicName",
+          "createdAt",
+          "updatedAt",
+          "status"
+        ]
+      },
+      "GetContactResponseDto": {
+        "type": "object",
+        "properties": {
+          "contact": {
+            "$ref": "#/components/schemas/ContactDto"
+          }
+        },
+        "required": [
+          "contact"
+        ]
+      },
       "GetContactsDto": {
         "type": "object",
         "properties": {
@@ -2000,6 +3104,26 @@
         },
         "required": [
           "channelId"
+        ]
+      },
+      "GetContactsResponseDto": {
+        "type": "object",
+        "properties": {
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "How many the channel holds, not how many this page returns",
+            "example": 128
+          }
+        },
+        "required": [
+          "contacts",
+          "total"
         ]
       },
       "CreateContactDto": {
@@ -2048,6 +3172,19 @@
           "channelId"
         ]
       },
+      "SyncContactsResponseDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "description": "How many contacts the import stored",
+            "example": 311
+          }
+        },
+        "required": [
+          "count"
+        ]
+      },
       "GetContactAvatarDto": {
         "type": "object",
         "properties": {
@@ -2063,6 +3200,36 @@
         "required": [
           "channelId",
           "contactId"
+        ]
+      },
+      "MediaDescriptorDto": {
+        "type": "object",
+        "properties": {
+          "mimeType": {
+            "type": "string",
+            "description": "The stored file’s media type, as the message (or the avatar convention) declares it",
+            "example": "image/jpeg"
+          },
+          "filename": {
+            "type": "string",
+            "description": "The file’s own name where the message carried one; absent for an avatar",
+            "example": "contract.pdf"
+          },
+          "storagePath": {
+            "type": "string",
+            "description": "The object-store key the bytes live under",
+            "example": "20261011-0931-0c28-7f3a-000000000045/messages/989121234567@s.whatsapp.net/3EB0C431C/contract.pdf"
+          },
+          "url": {
+            "type": "string",
+            "description": "The path that serves the bytes on this provider’s HTTP port. A PATH, not an absolute URL: the provider does not know the host it is reached on, so join it to the base you called.",
+            "example": "/storage/20261011-0931-0c28-7f3a-000000000045/messages/989121234567@s.whatsapp.net/3EB0C431C/contract.pdf"
+          }
+        },
+        "required": [
+          "mimeType",
+          "storagePath",
+          "url"
         ]
       },
       "SearchContactsDto": {
@@ -2142,6 +3309,29 @@
           "status"
         ]
       },
+      "UpdateContactDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "publicName": {
+            "type": "string",
+            "description": "The display name to store for this contact. The platform is NOT told.",
+            "example": "John Doe (Acme)"
+          }
+        },
+        "required": [
+          "channelId",
+          "contactId",
+          "publicName"
+        ]
+      },
       "GetChatDto": {
         "type": "object",
         "properties": {
@@ -2161,418 +3351,6 @@
             "example": "989121234567@s.whatsapp.net"
           }
         }
-      },
-      "GetChatsDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "page": {
-            "type": "number",
-            "example": 1
-          },
-          "limit": {
-            "type": "number",
-            "example": 50
-          }
-        },
-        "required": [
-          "channelId"
-        ]
-      },
-      "CreateChatDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "name": {
-            "type": "string",
-            "example": "Project Falcon"
-          },
-          "participants": {
-            "example": [
-              "989121234567@s.whatsapp.net"
-            ],
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "channelId",
-          "name"
-        ]
-      },
-      "UpdateChatDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          },
-          "name": {
-            "type": "string",
-            "example": "Project Falcon"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
-      },
-      "DeleteChatDto": {
-        "type": "object",
-        "properties": {
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          }
-        },
-        "required": [
-          "chatId"
-        ]
-      },
-      "SyncChatsDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          }
-        },
-        "required": [
-          "channelId"
-        ]
-      },
-      "GetChatAvatarDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
-      },
-      "GetChatParticipantsDto": {
-        "type": "object",
-        "properties": {
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          }
-        },
-        "required": [
-          "chatId"
-        ]
-      },
-      "AddChatParticipantDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          },
-          "participantId": {
-            "type": "string",
-            "example": "20261011-0933-0c30-7f3a-0000000000b7"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId",
-          "participantId"
-        ]
-      },
-      "RemoveChatParticipantDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          },
-          "participantId": {
-            "type": "string",
-            "example": "20261011-0933-0c30-7f3a-0000000000b7"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId",
-          "participantId"
-        ]
-      },
-      "MuteChatDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
-      },
-      "UnmuteChatDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
-      },
-      "ArchiveChatDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
-      },
-      "UnarchiveChatDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
-      },
-      "PinChatDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
-      },
-      "UnpinChatDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
-      },
-      "MarkChatAsReadDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
-      },
-      "SearchChatsDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "query": {
-            "type": "string",
-            "example": "invoice"
-          },
-          "limit": {
-            "type": "number",
-            "example": 50
-          }
-        },
-        "required": [
-          "channelId",
-          "query"
-        ]
-      },
-      "GetMessageDto": {
-        "type": "object",
-        "properties": {
-          "messageId": {
-            "type": "string",
-            "description": "The message row id",
-            "example": "20261011-0934-0c31-7f3a-0000000000c3"
-          },
-          "channelId": {
-            "type": "string",
-            "description": "Required with platformId",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "platformId": {
-            "type": "string",
-            "description": "The platform's message id, as carried on every provider event",
-            "example": "3EB0C431C26A1D1F4E2B"
-          }
-        }
-      },
-      "GetMessagesDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          },
-          "cursor": {
-            "type": "string",
-            "example": "20261011-0934-0c31-7f3a-0000000000c3"
-          },
-          "limit": {
-            "type": "number",
-            "example": 50
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
-      },
-      "GetMessageAttachmentsDto": {
-        "type": "object",
-        "properties": {
-          "channelId": {
-            "type": "string",
-            "example": "20261011-0931-0c28-7f3a-000000000045"
-          },
-          "chatId": {
-            "type": "string",
-            "example": "20261011-0932-0c29-7f3a-0000000000a1"
-          },
-          "cursor": {
-            "type": "string",
-            "example": "20261011-0934-0c31-7f3a-0000000000c3"
-          },
-          "limit": {
-            "type": "number",
-            "example": 50
-          },
-          "types": {
-            "type": "array",
-            "description": "Defaults to every file-bearing type",
-            "example": [
-              2,
-              7
-            ],
-            "items": {
-              "type": "number",
-              "enum": [
-                0,
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14,
-                15,
-                16,
-                17,
-                18,
-                99,
-                100
-              ]
-            }
-          },
-          "includeDeleted": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "channelId",
-          "chatId"
-        ]
       },
       "MessageAttachmentLocationDto": {
         "type": "object",
@@ -3118,6 +3896,1073 @@
           "type"
         ]
       },
+      "MessageReactionDto": {
+        "type": "object",
+        "properties": {
+          "emoji": {
+            "type": "string",
+            "example": "👍"
+          },
+          "count": {
+            "type": "number",
+            "description": "How many people reacted with it",
+            "example": 2
+          },
+          "isChosen": {
+            "type": "boolean",
+            "description": "The connected account is one of them",
+            "example": false
+          }
+        },
+        "required": [
+          "emoji",
+          "count",
+          "isChosen"
+        ]
+      },
+      "QuotedMessageDto": {
+        "type": "object",
+        "properties": {
+          "messageId": {
+            "type": "string",
+            "description": "The platform id of the message being quoted",
+            "example": "3EB0C431C26A1D1F4E2B"
+          },
+          "content": {
+            "$ref": "#/components/schemas/MessageContentDto"
+          }
+        },
+        "required": [
+          "messageId",
+          "content"
+        ]
+      },
+      "CallInfoDto": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "Who called, as a platform id",
+            "example": "989121234567@s.whatsapp.net"
+          },
+          "id": {
+            "type": "string",
+            "description": "The platform’s call id",
+            "example": "EB7A1C9F2D"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "offline": {
+            "type": "boolean",
+            "description": "The call arrived while the session was offline",
+            "example": false
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ],
+            "example": 6
+          },
+          "isVideo": {
+            "type": "boolean",
+            "example": false
+          },
+          "isGroup": {
+            "type": "boolean",
+            "example": false
+          },
+          "duration": {
+            "type": "number",
+            "description": "Seconds, when the call connected",
+            "example": 42
+          },
+          "type": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "example": 1
+          }
+        },
+        "required": [
+          "from",
+          "id",
+          "date",
+          "offline",
+          "status",
+          "isVideo",
+          "isGroup",
+          "type"
+        ]
+      },
+      "MessageDestructiveDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "example": 1
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When it disappears",
+            "example": "2026-10-11T09:34:12.000Z"
+          }
+        }
+      },
+      "MessageDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The provider’s own row id",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The platform’s message id",
+            "example": "3EB0C431C26A1D1F4E2B"
+          },
+          "contactId": {
+            "type": "string",
+            "description": "The sender as an IDENTITY: the stored row carries the sender’s platform id here (the column’s name is historical). Empty for an outbound message, and empty for a room member who is not a counterpart.",
+            "example": "989121234567@s.whatsapp.net"
+          },
+          "senderPlatformId": {
+            "type": "string",
+            "description": "ATTRIBUTION, not identity — who sent this, for display only. Set on a group / channel message, left unset in a one-to-one chat where the name comes from the chat’s own contact.",
+            "example": "989121234567@s.whatsapp.net"
+          },
+          "senderName": {
+            "type": "string",
+            "description": "The sender’s display name, for the same display-only purpose as senderPlatformId",
+            "example": "John Doe"
+          },
+          "me": {
+            "type": "boolean",
+            "description": "Sent by the connected account",
+            "example": false
+          },
+          "forwarded": {
+            "type": "boolean",
+            "example": false
+          },
+          "edited": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "deletionReason": {
+            "type": "string",
+            "description": "Why it is gone, when the platform says",
+            "example": "revoked"
+          },
+          "content": {
+            "$ref": "#/components/schemas/MessageContentDto"
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              100
+            ],
+            "example": 4
+          },
+          "type": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              99,
+              100
+            ],
+            "example": 1
+          },
+          "reactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageReactionDto"
+            }
+          },
+          "quoted": {
+            "$ref": "#/components/schemas/QuotedMessageDto"
+          },
+          "call": {
+            "$ref": "#/components/schemas/CallInfoDto"
+          },
+          "destructive": {
+            "$ref": "#/components/schemas/MessageDestructiveDto"
+          },
+          "mediaCachedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Set the moment this message’s media was pulled into permanent storage. From then on the attachment can never be expired again, so a reader must stop gating it behind a download click.",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "rawMessage": {
+            "type": "string",
+            "description": "The platform’s own payload, serialised, when the channel retains it",
+            "example": "{\"key\":{\"id\":\"3EB0C431C26A1D1F4E2B\"}}"
+          }
+        },
+        "required": [
+          "id",
+          "channelId",
+          "chatId",
+          "platformId",
+          "contactId",
+          "me",
+          "forwarded",
+          "edited",
+          "createdAt",
+          "content",
+          "status",
+          "type",
+          "reactions"
+        ]
+      },
+      "ChatDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The provider’s own row id",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The platform’s id for this conversation",
+            "example": "120363041234567890@g.us"
+          },
+          "altPlatformId": {
+            "type": "string",
+            "example": "81234567890123@lid"
+          },
+          "contactPlatformId": {
+            "type": "string",
+            "description": "The counterpart’s contact platform id, for a one-to-one chat whose own platformId is not the counterpart (an email thread is keyed by its root Message-ID). Unset where the chat id IS the peer id.",
+            "example": "989121234567@s.whatsapp.net"
+          },
+          "name": {
+            "type": "string",
+            "example": "Project Falcon"
+          },
+          "unreadMessages": {
+            "type": "number",
+            "description": "Unread count as the provider counts it",
+            "example": 3
+          },
+          "avatarUrl": {
+            "type": "string",
+            "example": "/storage/20261011-0931-0c28-7f3a-000000000045/avatars/contact/989121234567.jpg"
+          },
+          "hasAvatar": {
+            "type": "boolean",
+            "nullable": true,
+            "example": true
+          },
+          "lastMessage": {
+            "description": "The preview row this chat shows, when it has one",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MessageDto"
+              }
+            ]
+          },
+          "lastMessageAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:31:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "mode": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "example": 1
+          },
+          "type": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "example": 2
+          },
+          "syncStatus": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "example": 1
+          },
+          "isMuted": {
+            "type": "boolean",
+            "example": false
+          },
+          "isArchived": {
+            "type": "boolean",
+            "example": false
+          },
+          "isPinned": {
+            "type": "boolean",
+            "example": false
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true
+          },
+          "isGroup": {
+            "type": "boolean",
+            "example": true
+          },
+          "metadata": {
+            "type": "object",
+            "example": {
+              "subject": "Project Falcon"
+            }
+          },
+          "allowedReactions": {
+            "nullable": true,
+            "description": "The reactions this chat accepts, when the platform limits them",
+            "example": [
+              "👍",
+              "❤️"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "isSecret": {
+            "type": "boolean",
+            "example": false
+          },
+          "counterpartIsAutomated": {
+            "type": "boolean",
+            "description": "The one-to-one counterpart is an automated account (a bot): a conversation whose counterpart is never a contact. Unset while the provider has not established it, and for groups.",
+            "example": false
+          },
+          "tags": {
+            "example": [
+              "priority"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "participants": {
+            "description": "The roster as platform ids; `chats/get-participants` answers the joined rows",
+            "example": [
+              "989121234567@s.whatsapp.net"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "channelId",
+          "platformId",
+          "name",
+          "unreadMessages",
+          "createdAt",
+          "mode",
+          "type",
+          "syncStatus",
+          "isMuted",
+          "isArchived",
+          "isPinned",
+          "isActive"
+        ]
+      },
+      "GetChatResponseDto": {
+        "type": "object",
+        "properties": {
+          "chat": {
+            "$ref": "#/components/schemas/ChatDto"
+          }
+        },
+        "required": [
+          "chat"
+        ]
+      },
+      "GetChatsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        },
+        "required": [
+          "channelId"
+        ]
+      },
+      "GetChatsResponseDto": {
+        "type": "object",
+        "properties": {
+          "chats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 42
+          }
+        },
+        "required": [
+          "chats",
+          "total"
+        ]
+      },
+      "CreateChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "name": {
+            "type": "string",
+            "example": "Project Falcon"
+          },
+          "participants": {
+            "example": [
+              "989121234567@s.whatsapp.net"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "channelId",
+          "name"
+        ]
+      },
+      "UpdateChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "name": {
+            "type": "string",
+            "example": "Project Falcon"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "UpdateChatResponseDto": {
+        "type": "object",
+        "properties": {
+          "chat": {
+            "$ref": "#/components/schemas/ChatDto"
+          }
+        },
+        "required": [
+          "chat"
+        ]
+      },
+      "DeleteChatDto": {
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "SyncChatsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          }
+        },
+        "required": [
+          "channelId"
+        ]
+      },
+      "SyncChatsResponseDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "description": "How many chats the import stored",
+            "example": 42
+          }
+        },
+        "required": [
+          "count"
+        ]
+      },
+      "GetChatAvatarDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "GetChatParticipantsDto": {
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "ChatParticipantDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0935-0c32-7f3a-0000000000d9"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "contactId": {
+            "type": "string",
+            "description": "Our contact row id for this member",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "role": {
+            "type": "string",
+            "description": "The member’s role in the chat",
+            "example": "admin"
+          },
+          "leftAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Set once the member left",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The member’s platform id, joined in from the contact row — what puts a name on a group message, since a message names its sender by platform id and not by our UUID.",
+            "example": "989121234567@s.whatsapp.net"
+          },
+          "altPlatformId": {
+            "type": "string",
+            "description": "What makes a LID-addressed message match a phone-JID-keyed contact",
+            "example": "81234567890123@lid"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "example": "/storage/20261011-0931-0c28-7f3a-000000000045/avatars/contact/989121234567.jpg"
+          }
+        },
+        "required": [
+          "id",
+          "chatId",
+          "contactId",
+          "channelId"
+        ]
+      },
+      "AddChatParticipantDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "participantId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "participantId"
+        ]
+      },
+      "RemoveChatParticipantDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "participantId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "participantId"
+        ]
+      },
+      "MuteChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "UnmuteChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "ArchiveChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "UnarchiveChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "PinChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "UnpinChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "MarkChatAsReadDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "SearchChatsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "query": {
+            "type": "string",
+            "example": "invoice"
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        },
+        "required": [
+          "channelId",
+          "query"
+        ]
+      },
+      "GetMessageDto": {
+        "type": "object",
+        "properties": {
+          "messageId": {
+            "type": "string",
+            "description": "The message row id",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "channelId": {
+            "type": "string",
+            "description": "Required with platformId",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The platform's message id, as carried on every provider event",
+            "example": "3EB0C431C26A1D1F4E2B"
+          }
+        }
+      },
+      "GetMessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "$ref": "#/components/schemas/MessageDto"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "GetMessagesDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "cursor": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "GetMessagesResponseDto": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageDto"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Pass it back as `cursor` for the next page; absent on the last one",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "total": {
+            "type": "number",
+            "description": "How many messages the chat holds",
+            "example": 128
+          },
+          "historyLoading": {
+            "type": "boolean",
+            "description": "A background history fetch for this chat is running, so more is on its way — it arrives on the MessageSync event, and ChatHistoryLoaded says it finished. `messages/history` always answers false: it reads the stored rows and never starts a fetch.",
+            "example": false
+          }
+        },
+        "required": [
+          "messages",
+          "total",
+          "historyLoading"
+        ]
+      },
+      "GetMessageAttachmentsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "cursor": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          },
+          "types": {
+            "type": "array",
+            "description": "Defaults to every file-bearing type",
+            "example": [
+              2,
+              7
+            ],
+            "items": {
+              "type": "number",
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                99,
+                100
+              ]
+            }
+          },
+          "includeDeleted": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "GetMessageAttachmentsResponseDto": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "description": "The file-bearing messages themselves — a file IS a message here, not a separate record",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageDto"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "total": {
+            "type": "number",
+            "example": 17
+          }
+        },
+        "required": [
+          "messages",
+          "total"
+        ]
+      },
       "SendMessageDto": {
         "type": "object",
         "properties": {
@@ -3148,6 +4993,17 @@
         "required": [
           "channelId",
           "content"
+        ]
+      },
+      "SendMessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "$ref": "#/components/schemas/MessageDto"
+          }
+        },
+        "required": [
+          "message"
         ]
       },
       "SendLocationDto": {
@@ -3541,6 +5397,24 @@
           "content"
         ]
       },
+      "UpdateMessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "nullable": true,
+            "description": "The edited row, or null when the platform accepted the edit and we hold no row for it",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MessageDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
       "DeleteMessageDto": {
         "type": "object",
         "properties": {
@@ -3586,6 +5460,173 @@
         "required": [
           "channelId",
           "chatId"
+        ]
+      },
+      "ProviderMessageDestructiveDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "example": 1
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          }
+        }
+      },
+      "ProviderMessageDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The provider’s row id, once persisted",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "platformId": {
+            "type": "string",
+            "example": "3EB0C431C26A1D1F4E2B"
+          },
+          "contactPlatformId": {
+            "type": "string",
+            "description": "The sender as an IDENTITY CLAIM — central resolves it into a contact and a person, so it is set only for a sender who belongs in the customer’s CRM.",
+            "example": "989121234567@s.whatsapp.net"
+          },
+          "senderPlatformId": {
+            "type": "string",
+            "description": "ATTRIBUTION, not identity: who sent this, for display only. Never reaches contact creation.",
+            "example": "989121234567@s.whatsapp.net"
+          },
+          "senderName": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "chatPlatformId": {
+            "type": "string",
+            "example": "120363041234567890@g.us"
+          },
+          "content": {
+            "$ref": "#/components/schemas/MessageContentDto"
+          },
+          "me": {
+            "type": "boolean",
+            "example": false
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              100
+            ],
+            "example": 3
+          },
+          "type": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              99,
+              100
+            ],
+            "example": 1
+          },
+          "forwarded": {
+            "type": "boolean",
+            "example": false
+          },
+          "edited": {
+            "type": "boolean",
+            "example": false
+          },
+          "reactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageReactionDto"
+            }
+          },
+          "quoted": {
+            "$ref": "#/components/schemas/QuotedMessageDto"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "rawMessage": {
+            "type": "string",
+            "example": "{\"key\":{\"id\":\"3EB0C431C26A1D1F4E2B\"}}"
+          },
+          "destructive": {
+            "$ref": "#/components/schemas/ProviderMessageDestructiveDto"
+          },
+          "call": {
+            "$ref": "#/components/schemas/CallInfoDto"
+          },
+          "mediaCachedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          }
+        },
+        "required": [
+          "platformId",
+          "chatPlatformId",
+          "content",
+          "me",
+          "status",
+          "type",
+          "timestamp"
+        ]
+      },
+      "SyncMessagesResponseDto": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderMessageDto"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Pass it back to continue the history walk; absent when the platform has no more",
+            "example": "3EB0C431C26A1D1F4E2B"
+          }
+        },
+        "required": [
+          "messages"
         ]
       },
       "ReplyMessageDto": {
@@ -3644,6 +5685,21 @@
           "chatId",
           "messageId",
           "toChatIds"
+        ]
+      },
+      "ForwardMessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "description": "One per target chat, in the order they were given",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderMessageDto"
+            }
+          }
+        },
+        "required": [
+          "messages"
         ]
       },
       "ReactToMessageDto": {
@@ -3818,6 +5874,81 @@
           "channelId"
         ]
       },
+      "ChannelLogDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0936-0c33-7f3a-0000000000e5"
+          },
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "action": {
+            "type": "string",
+            "description": "What was being done",
+            "example": "messages/send"
+          },
+          "level": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "example": 0
+          },
+          "message": {
+            "type": "string",
+            "example": "Session connected"
+          },
+          "data": {
+            "type": "object",
+            "description": "Whatever the entry carried; shape is the writer’s own",
+            "example": {
+              "chatId": "20261011-0932-0c29-7f3a-0000000000a1"
+            }
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "channelId",
+          "level",
+          "message",
+          "timestamp"
+        ]
+      },
+      "GetLogsResponseDto": {
+        "type": "object",
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChannelLogDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 940
+          }
+        },
+        "required": [
+          "logs",
+          "total"
+        ]
+      },
       "GetWebhookLogsDto": {
         "type": "object",
         "properties": {
@@ -3844,6 +5975,117 @@
         },
         "required": [
           "channelId"
+        ]
+      },
+      "WebhookLogDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0937-0c34-7f3a-0000000000f1"
+          },
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "action": {
+            "type": "string",
+            "nullable": true,
+            "example": "message.new"
+          },
+          "method": {
+            "type": "string",
+            "example": "POST"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://example.com/webhooks/kalagh"
+          },
+          "status": {
+            "type": "number",
+            "description": "The delivery’s own status (WebhookStatusType), or the HTTP status it ended on",
+            "example": 2
+          },
+          "attempts": {
+            "type": "number",
+            "description": "How many times it has been tried",
+            "example": 1
+          },
+          "responseTime": {
+            "type": "number",
+            "nullable": true,
+            "description": "Milliseconds",
+            "example": 184
+          },
+          "responseCode": {
+            "type": "number",
+            "nullable": true,
+            "example": 200
+          },
+          "headers": {
+            "type": "object",
+            "description": "The headers sent",
+            "example": {
+              "content-type": "application/json"
+            }
+          },
+          "body": {
+            "type": "object",
+            "description": "The payload sent",
+            "example": {
+              "eventName": "message.new"
+            }
+          },
+          "responseBody": {
+            "type": "object",
+            "description": "What came back",
+            "example": {
+              "ok": true
+            }
+          },
+          "error": {
+            "type": "string",
+            "nullable": true,
+            "example": "connect ETIMEDOUT"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-11T09:34:12.000Z"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2026-10-11T09:34:12.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "channelId",
+          "method",
+          "url",
+          "status",
+          "createdAt"
+        ]
+      },
+      "GetWebhookLogsResponseDto": {
+        "type": "object",
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookLogDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 612
+          }
+        },
+        "required": [
+          "logs",
+          "total"
         ]
       }
     }
