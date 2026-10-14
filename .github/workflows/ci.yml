@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test on Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The two maintained LTS lines.
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+
+  extension:
+    name: Build the Claude Desktop extension
+    runs-on: ubuntu-latest
+    needs: test
+    # Job-level, so a step's `if` can see them: a step's own env is not in
+    # scope for its condition, and `secrets` cannot be used in `if` at all.
+    env:
+      KALAGH_API_URL: ${{ secrets.KALAGH_API_URL }}
+      KALAGH_API_KEY: ${{ secrets.KALAGH_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # build → bundle → `mcpb validate` → `mcpb pack`
+      - run: pnpm pack:mcpb
+      # The bundle has to start on its own: no node_modules, schema found beside it.
+      - name: The bundled server starts and refuses a missing configuration
+        run: |
+          set +e
+          out=$(env -u KALAGH_API_URL -u KALAGH_API_KEY node bundle/server/index.js 2>&1 </dev/null)
+          code=$?
+          echo "$out"
+          [ $code -eq 1 ] && echo "$out" | grep -q "Missing required configuration: KALAGH_API_URL, KALAGH_API_KEY"
+      # Read-only smoke test against a real provider, only when the repository
+      # has the secrets. It lists, reads and checks refusals; it never writes.
+      - name: Smoke test against the provider (read-only)
+        if: env.KALAGH_API_KEY != '' && env.KALAGH_API_URL != ''
+        env:
+          SMOKE_ENTRY: bundle/server/index.js
+        run: node scripts/smoke.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kalagh-mcpb
+          path: kalagh.mcpb
+          if-no-files-found: error

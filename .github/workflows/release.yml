@@ -1,0 +1,45 @@
+name: Release
+
+# Pushing a tag vX.Y.Z (made by `npm version`, see README → Releasing) builds the
+# Claude Desktop extension and publishes it as a GitHub Release.
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: The tag, package.json and manifest.json agree
+        run: |
+          pkg="v$(node -p "require('./package.json').version")"
+          man="v$(node -p "require('./manifest.json').version")"
+          if [ "$pkg" != "$GITHUB_REF_NAME" ] || [ "$man" != "$GITHUB_REF_NAME" ]; then
+            echo "tag $GITHUB_REF_NAME, package.json $pkg, manifest.json $man — bump with \`npm version\`"
+            exit 1
+          fi
+
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm pack:mcpb
+      - run: mv kalagh.mcpb "kalagh-mcp-${GITHUB_REF_NAME}.mcpb"
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" "kalagh-mcp-${GITHUB_REF_NAME}.mcpb" \
+            --title "kalagh-mcp ${GITHUB_REF_NAME}" \
+            --generate-notes \
+            --verify-tag

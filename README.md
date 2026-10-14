@@ -1,5 +1,7 @@
 # kalagh-mcp
 
+[![CI](https://github.com/navid-kianfar/kalagh-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/navid-kianfar/kalagh-mcp/actions/workflows/ci.yml)
+
 An MCP server for one **Kalagh provider** (WhatsApp, Telegram, Instagram, email, …). Every
 provider operation — channels, contacts, chats, messages, media, logs — is a tool for Claude,
 carried over the transport you pick: **REST**, **Socket.IO** or **gRPC**.
@@ -13,22 +15,35 @@ carried over the transport you pick: **REST**, **Socket.IO** or **gRPC**.
   transports: the REST path *is* the socket event name, and the controller method *is* the
   gRPC rpc. So each tool runs unchanged on whichever transport you configure.
 - **Safe by default where it matters.** Arguments are validated against the schema before they
-  leave, and unknown fields are refused, exactly as REST refuses them. Sends, edits, deletions,
-  blocks and group changes are annotated *destructive*. `KALAGH_READ_ONLY=true` hides every
+  leave, and unknown fields are refused, exactly as REST refuses them. Every route is classified by
+  hand (read, write or destructive). Anything that reaches other people — sends, reactions,
+  edits, read receipts, blocks, group changes — or deletes or redirects data (a channel's
+  webhook or credentials) is annotated *destructive*. A route the table doesn't know is
+  treated as destructive. `KALAGH_READ_ONLY=true` hides every
   tool that writes.
 
 ## Install
 
-```bash
-cd kalagh-mcp
-pnpm install
-pnpm build
-```
+Each release on GitHub ([Releases](https://github.com/navid-kianfar/kalagh-mcp/releases)) is a
+tag `vX.Y.Z` with the Claude Desktop extension `kalagh-mcp-vX.Y.Z.mcpb` attached. Both ways of
+installing below use a release. Neither needs a clone or a build of your own.
+
+### Claude Desktop (chat) — a desktop extension with a settings form
+
+1. Download `kalagh-mcp-vX.Y.Z.mcpb` from the latest release.
+2. Double-click it, or drag it onto **Settings → Extensions**.
+3. Fill in the form: the provider URL, the API key (stored in the OS keychain), the transport,
+   the socket and gRPC addresses, read-only mode and the download folder.
+
+No JSON editing is needed. The extension carries the whole server in one file and runs on
+the Node.js that ships with Claude Desktop. To update, install the newer `.mcpb` over it; your
+settings are kept.
 
 ### Claude Code (CLI, and the Code tab of the desktop app)
 
 Register it once at **user** scope and it is available in every project. The Code tab of the
-Claude desktop app runs Claude Code, so it picks up the same registration:
+Claude desktop app runs Claude Code, so it picks up the same registration. `npx` fetches the
+tagged release from GitHub and builds it on first start (a few seconds, then cached):
 
 ```bash
 claude mcp add kalagh --scope user \
@@ -37,11 +52,12 @@ claude mcp add kalagh --scope user \
   -e KALAGH_TRANSPORT=grpc \
   -e KALAGH_GRPC_URL=kalagh-grpc.smg.tr:443 \
   -e KALAGH_WS_URL=https://kalagh-ws.smg.tr \
-  -- node /path/to/kalagh-mcp/dist/index.js
+  -- npx -y github:navid-kianfar/kalagh-mcp#v1.0.0
 ```
 
 `claude mcp list` should show `kalagh` as connected. Inside a session, `/mcp` shows its tools,
-and the `status` tool reports how it is connected.
+and the `status` tool reports how it is connected. To update, change the tag
+(`claude mcp remove kalagh`, then add it again with the new `#vX.Y.Z`).
 
 To keep the key out of the config file, use a project `.mcp.json`. Claude Code expands
 environment variables in it, so the key stays in your shell profile:
@@ -50,8 +66,8 @@ environment variables in it, so the key stays in your shell profile:
 {
   "mcpServers": {
     "kalagh": {
-      "command": "node",
-      "args": ["/path/to/kalagh-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "github:navid-kianfar/kalagh-mcp#v1.0.0"],
       "env": {
         "KALAGH_API_URL": "https://kalagh.smg.tr",
         "KALAGH_API_KEY": "${KALAGH_API_KEY}",
@@ -62,21 +78,12 @@ environment variables in it, so the key stays in your shell profile:
 }
 ```
 
+To run a local checkout instead, use `pnpm install && pnpm build`, then
+`node /path/to/kalagh-mcp/dist/index.js` as the command.
+
 **Don't paste the API key into a chat.** Anything typed into a conversation is kept in its
 transcript, and nothing in a chat can register an MCP server. Configuration belongs in the
-MCP config (above) or the extension's settings (below).
-
-### Claude Desktop (chat) — a desktop extension with a settings form
-
-```bash
-pnpm pack:mcpb          # → kalagh.mcpb
-```
-
-Double-click `kalagh.mcpb`, or drag it onto **Settings → Extensions**. Claude Desktop shows a
-form for the provider URL, the API key (stored in the OS keychain), the transport, the socket
-and gRPC addresses, read-only mode and the download folder. No JSON editing is needed. The
-extension carries the whole server in one file and runs on the Node.js that ships with Claude
-Desktop.
+MCP config (above) or the extension's settings.
 
 ### Several providers
 
@@ -92,8 +99,9 @@ as `mcp__kalagh-whatsapp__messages_send` and so on.
 | `KALAGH_API_KEY` | *(required)* | The provider's `API_KEY`. Sent as `x-api-key` (REST), in the handshake (Socket.IO), or as `x-api-key` metadata (gRPC). |
 | `KALAGH_TRANSPORT` | `http` | `http`, `ws` or `grpc`. |
 | `KALAGH_WS_URL` | — | Socket.IO URL, e.g. `https://kalagh-ws.smg.tr`. Required for `ws`. When set, provider events are buffered for `events_recent`. |
-| `KALAGH_GRPC_URL` | — | `host:port`, e.g. `kalagh-grpc.smg.tr:443`. Required for `grpc`. |
-| `KALAGH_GRPC_TLS` | on for `:443` | TLS on the gRPC channel. |
+| `KALAGH_GRPC_URL` | — | `host:port`, e.g. `kalagh-grpc.smg.tr:443`. Required for `grpc`. A local provider is `grpc://localhost:4002`. When set (and no socket URL is), provider events come from `StreamEvents`. |
+| `KALAGH_GRPC_TLS` | TLS, except loopback | TLS on the gRPC channel. `grpcs://` in the URL forces it on, and `grpc://` or `false` turns it off. Plaintext is the default only for `localhost`/`127.0.0.1`/`::1`, because the key travels in the call metadata. |
+| `KALAGH_STORAGE_ORIGINS` | — | Comma-separated origins `storage_get` may download from besides the provider's own, e.g. the object store behind presigned attachment links. Nothing else is ever fetched. |
 | `KALAGH_READ_ONLY` | `false` | Only the tools that read are listed. |
 | `KALAGH_DOWNLOAD_DIR` | `$TMPDIR/kalagh-mcp` | Where avatars, media and storage downloads are written. |
 | `KALAGH_TIMEOUT_MS` | `60000` | Per-call timeout. |
@@ -139,6 +147,36 @@ stringified. A field REST takes but the proto doesn't declare is never dropped. 
 over REST instead. Today there is no such field (`KNOWN_PROTO_GAPS` in `test/surface.test.ts`
 is empty, and fails when the provider grows one).
 
+## Releasing
+
+Releases are cut from `main` by tagging; CI does the rest.
+
+```bash
+npm version patch        # or minor / major
+git push --follow-tags
+```
+
+`npm version` bumps `package.json`. Its `version` hook gives `manifest.json` the same number,
+then npm commits both and tags `vX.Y.Z`. Pushing the tag runs
+[`release.yml`](.github/workflows/release.yml), which:
+
+1. checks that the tag, `package.json` and `manifest.json` agree;
+2. typechecks and runs the tests;
+3. builds `kalagh-mcp-vX.Y.Z.mcpb`;
+4. publishes a GitHub Release with the `.mcpb` attached and generated notes.
+
+The Claude Code install pins a tag too (`github:navid-kianfar/kalagh-mcp#vX.Y.Z`), so a release
+is the only deployment there is: nothing runs on a server. Every push and pull request runs
+[`ci.yml`](.github/workflows/ci.yml): typecheck and tests on Node 22 and 24, then the `.mcpb`
+build. CI also checks that the bundled server starts on its own and refuses a missing
+configuration. With the repository secrets `KALAGH_API_URL` and `KALAGH_API_KEY` set, CI also
+runs the read-only smoke test against that provider.
+
+When the provider's API changes: in kalagh, run `pnpm --filter @kalagh/core postman:generate`
+(which writes `providers/docs/openapi.json`). Here, run `pnpm sync-schema && pnpm test`, then
+commit and release. A running provider's own `/api/docs-json` takes precedence anyway, so a
+schema sync only matters for the offline fallback and the gRPC proto.
+
 ## Development
 
 ```bash
@@ -156,17 +194,6 @@ The snapshot's source of record is the kalagh repo. `pnpm --filter @kalagh/core 
 writes `providers/docs/openapi.json` alongside the Postman collection, and the provider's drift
 test fails when either is stale. Run `pnpm sync-schema` here after it changes.
 
-### Provider versions (as of kalagh `509e842fd`)
+## License
 
-These are fixed in the kalagh source; a provider deployed before the named commit still behaves
-the old way until it is redeployed.
-
-- gRPC `StreamEvents` answered UNIMPLEMENTED (the handler was registered as client-streaming)
-  until kalagh `e3da0059d`. Against an older provider, set `KALAGH_WS_URL` so events come from the
-  socket; without it, `status` reports the error.
-- gRPC `UpdateChannelRequest` had no `metadata` until kalagh `509e842fd`; the schema here now
-  carries it, so `channels/update` goes over gRPC too. proto3 cannot tell an empty map from an
-  absent one, so an empty `metadata` leaves the stored labels untouched on gRPC.
-- gRPC media and avatar bytes and gRPC `SendMedia` were fixed in kalagh `73aa17fe0`. A
-  provider deployed before that answers empty bytes over gRPC. Media then falls back to
-  `/storage`, and uploads always go over REST.
+Proprietary — © AchaSoft, all rights reserved. See [LICENSE](LICENSE).

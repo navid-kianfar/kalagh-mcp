@@ -8,6 +8,7 @@
  *     server/index.js      ← esbuild of src/index.ts
  *     schema/openapi.json  ← found at ../schema from server/, as from dist/
  *     schema/kalagh.proto
+ *     LICENSE
  */
 import { build } from 'esbuild';
 import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -35,6 +36,7 @@ await build({
 });
 
 cpSync(join(root, 'schema'), join(out, 'schema'), { recursive: true });
+cpSync(join(root, 'LICENSE'), join(out, 'LICENSE'));
 
 // The manifest's version follows package.json, so the two cannot drift.
 const manifest = JSON.parse(readFileSync(join(root, 'manifest.json'), 'utf8'));

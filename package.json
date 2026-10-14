@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "MCP server for a Kalagh provider — every provider operation as a tool, over REST, Socket.IO or gRPC",
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "SEE LICENSE IN LICENSE",
   "private": true,
   "bin": {
     "kalagh-mcp": "dist/index.js"
@@ -16,15 +16,19 @@
   "engines": {
     "node": ">=20"
   },
+  "packageManager": "pnpm@12.8.1",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepare": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "tsc -p tsconfig.test.json && ln -sfn ../schema dist-test/schema && node --test \"dist-test/test/**/*.test.js\"",
     "sync-schema": "node scripts/sync-schema.mjs",
     "bundle": "node scripts/bundle.mjs",
     "pack:mcpb": "pnpm build && pnpm bundle && mcpb validate bundle/manifest.json && mcpb pack bundle kalagh.mcpb",
     "inspect": "pnpm build && npx -y @modelcontextprotocol/inspector node dist/index.js",
-    "clean": "rm -rf dist dist-test bundle *.mcpb"
+    "clean": "rm -rf dist dist-test bundle *.mcpb",
+    "smoke": "node scripts/smoke.mjs",
+    "version": "node scripts/sync-manifest-version.mjs && git add manifest.json"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.6",
@@ -38,5 +42,9 @@
     "@types/node": "^24.13.2",
     "esbuild": "^0.28.2",
     "typescript": "^5.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/navid-kianfar/kalagh-mcp.git"
   }
 }
