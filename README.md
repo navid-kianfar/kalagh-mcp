@@ -136,7 +136,8 @@ Special handling:
 On gRPC, arguments are shaped onto the proto from the proto itself: free-form objects
 (`credentials`, every `metadata`) travel as JSON strings, and `map<string,string>` values are
 stringified. A field REST takes but the proto doesn't declare is never dropped. That call goes
-over REST instead. Today the one such field is `channels/update.metadata`.
+over REST instead. Today there is no such field (`KNOWN_PROTO_GAPS` in `test/surface.test.ts`
+is empty, and fails when the provider grows one).
 
 ## Development
 
@@ -155,12 +156,17 @@ The snapshot's source of record is the kalagh repo. `pnpm --filter @kalagh/core 
 writes `providers/docs/openapi.json` alongside the Postman collection, and the provider's drift
 test fails when either is stale. Run `pnpm sync-schema` here after it changes.
 
-### Known provider gaps (as of kalagh `4bd8e82f4`)
+### Provider versions (as of kalagh `509e842fd`)
 
-- gRPC `StreamEvents` answers UNIMPLEMENTED: the handler is registered as client-streaming. With
-  `KALAGH_WS_URL` set, events come from the socket instead. Without it, `status` reports the error.
-- gRPC `UpdateChannelRequest` has no `metadata`, so that call goes over REST
-  (`KNOWN_PROTO_GAPS` in `test/surface.test.ts`).
+These are fixed in the kalagh source; a provider deployed before the named commit still behaves
+the old way until it is redeployed.
+
+- gRPC `StreamEvents` answered UNIMPLEMENTED (the handler was registered as client-streaming)
+  until kalagh `e3da0059d`. Against an older provider, set `KALAGH_WS_URL` so events come from the
+  socket; without it, `status` reports the error.
+- gRPC `UpdateChannelRequest` had no `metadata` until kalagh `509e842fd`; the schema here now
+  carries it, so `channels/update` goes over gRPC too. proto3 cannot tell an empty map from an
+  absent one, so an empty `metadata` leaves the stored labels untouched on gRPC.
 - gRPC media and avatar bytes and gRPC `SendMedia` were fixed in kalagh `73aa17fe0`. A
   provider deployed before that answers empty bytes over gRPC. Media then falls back to
   `/storage`, and uploads always go over REST.

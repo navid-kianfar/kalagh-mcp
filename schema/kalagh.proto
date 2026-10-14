@@ -117,6 +117,11 @@ message UpdateChannelRequest {
   bool logWebhook = 7;
   int32 logLevel = 8;
   string webhookUrl = 9;
+  // Free-form labels the caller keeps on the channel (REST `metadata`). When
+  // set it REPLACES what is stored. proto3 cannot tell an empty map from an
+  // absent one, so an empty map leaves the stored metadata untouched — gRPC
+  // cannot clear it; REST `channels/update` with `{}` can.
+  map<string, string> metadata = 10;
 }
 
 message UpdateChannelResponse {

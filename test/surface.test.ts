@@ -88,7 +88,7 @@ test('unknown fields are refused, as REST refuses them', () => {
  * goes over REST even on the gRPC transport. The list is exact, so a NEW gap
  * in the provider fails here instead of quietly changing transports.
  */
-const KNOWN_PROTO_GAPS = ['channels/update: UpdateChannel.metadata'];
+const KNOWN_PROTO_GAPS: string[] = [];
 
 test('every documented example shapes into its gRPC request, bar the known gaps', () => {
   const failures: string[] = [];
