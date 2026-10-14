@@ -1,0 +1,88 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/mcpb/main/dist/mcpb-manifest-v0.3.schema.json",
+  "manifest_version": "0.3",
+  "name": "kalagh",
+  "display_name": "Kalagh Provider",
+  "version": "1.0.0",
+  "description": "Drive a Kalagh messaging provider — channels, contacts, chats, messages and media — over REST, Socket.IO or gRPC.",
+  "long_description": "Every operation of a Kalagh provider (WhatsApp, Telegram, Instagram, email, …) as a tool. The tools are generated from the provider's own OpenAPI document, so they always match the provider you connect to. Pick REST, Socket.IO or gRPC as the transport. With a socket or gRPC endpoint configured, the provider's live events are buffered and readable through the events_recent tool. Sends and deletions are marked destructive, and read-only mode hides every tool that changes anything.",
+  "author": {
+    "name": "AchaSoft"
+  },
+  "keywords": ["kalagh", "whatsapp", "messaging", "omnichannel", "grpc", "socket.io"],
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": {
+        "KALAGH_API_URL": "${user_config.api_url}",
+        "KALAGH_API_KEY": "${user_config.api_key}",
+        "KALAGH_TRANSPORT": "${user_config.transport}",
+        "KALAGH_WS_URL": "${user_config.ws_url}",
+        "KALAGH_GRPC_URL": "${user_config.grpc_url}",
+        "KALAGH_READ_ONLY": "${user_config.read_only}",
+        "KALAGH_DOWNLOAD_DIR": "${user_config.download_dir}"
+      }
+    }
+  },
+  "tools_generated": true,
+  "user_config": {
+    "api_url": {
+      "type": "string",
+      "title": "Provider REST URL",
+      "description": "The provider's HTTP base, without /api/kalagh. Always required: the tool list, uploads and /storage downloads use it.",
+      "default": "https://kalagh.smg.tr",
+      "required": true
+    },
+    "api_key": {
+      "type": "string",
+      "title": "API key",
+      "description": "The provider's API_KEY. Stored in the operating system's keychain.",
+      "sensitive": true,
+      "required": true
+    },
+    "transport": {
+      "type": "string",
+      "title": "Transport",
+      "description": "http, ws or grpc — which protocol carries the operations. ws needs the Socket.IO URL, grpc needs the gRPC address.",
+      "default": "http",
+      "required": false
+    },
+    "ws_url": {
+      "type": "string",
+      "title": "Socket.IO URL",
+      "description": "e.g. https://kalagh-ws.smg.tr. Needed for the ws transport; when set, provider events are also buffered for events_recent.",
+      "default": "https://kalagh-ws.smg.tr",
+      "required": false
+    },
+    "grpc_url": {
+      "type": "string",
+      "title": "gRPC address",
+      "description": "host:port, e.g. kalagh-grpc.smg.tr:443 (TLS is used on port 443). Needed for the grpc transport.",
+      "default": "kalagh-grpc.smg.tr:443",
+      "required": false
+    },
+    "read_only": {
+      "type": "boolean",
+      "title": "Read-only",
+      "description": "Expose only the tools that read. Nothing can be sent, edited or deleted.",
+      "default": false,
+      "required": false
+    },
+    "download_dir": {
+      "type": "directory",
+      "title": "Download folder",
+      "description": "Where avatars, media and storage downloads are saved. Defaults to the system temp folder.",
+      "required": false
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=20.0.0"
+    }
+  },
+  "license": "UNLICENSED"
+}

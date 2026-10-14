@@ -1,0 +1,3856 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/kalagh/health": {
+      "get": {
+        "operationId": "ApiController_health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Liveness probe — no authentication required",
+        "tags": [
+          "Health"
+        ],
+        "security": []
+      }
+    },
+    "/api/kalagh/info": {
+      "get": {
+        "operationId": "ApiController_info",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Which platform this provider instance serves",
+        "tags": [
+          "Health"
+        ],
+        "security": []
+      }
+    },
+    "/api/kalagh/channels/create": {
+      "post": {
+        "operationId": "ApiController_createChannel",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChannelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Create a channel and return its first QR code / state",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/channels/get": {
+      "post": {
+        "operationId": "ApiController_getChannel",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetChannelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "One channel by row id or by the connected account id",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/channels/aliases": {
+      "post": {
+        "operationId": "ApiController_getPlatformAliases",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetPlatformAliasesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "The identity pairings this channel observed (e.g. WhatsApp LID ↔ phone JID)",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/channels/list": {
+      "post": {
+        "operationId": "ApiController_getChannels",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetChannelsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A page of channels",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/channels/update": {
+      "post": {
+        "operationId": "ApiController_updateChannel",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChannelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Change a channel’s title, webhook, event and logging settings",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/channels/credentials/patch": {
+      "post": {
+        "operationId": "ApiController_patchChannelCredentials",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchChannelCredentialsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Deep-merge fields into a channel’s stored credentials",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/channels/delete": {
+      "post": {
+        "operationId": "ApiController_deleteChannel",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteChannelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Delete a channel and everything that hangs off it",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/channels/terminate": {
+      "post": {
+        "operationId": "ApiController_terminateChannel",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TerminateChannelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Log the channel out of the platform (pairing is dropped)",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/channels/restart": {
+      "post": {
+        "operationId": "ApiController_restartChannel",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestartChannelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Reconnect the channel’s session, keeping its pairing",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/channels/unload": {
+      "post": {
+        "operationId": "ApiController_unloadChannel",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnloadChannelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Drop the channel’s session from memory without logging out",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/channels/request-qr": {
+      "post": {
+        "operationId": "ApiController_requestQRCode",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestQRCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A fresh login QR code for a channel awaiting pairing",
+        "tags": [
+          "Channels"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/get": {
+      "post": {
+        "operationId": "ApiController_getContact",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "One contact by row id, or by platform id within a channel",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/list": {
+      "post": {
+        "operationId": "ApiController_getContacts",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetContactsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A page of a channel’s contacts",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/create": {
+      "post": {
+        "operationId": "ApiController_createContact",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Create a contact from a name and phone number",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/delete": {
+      "post": {
+        "operationId": "ApiController_deleteContact",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Soft-delete a contact",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/sync": {
+      "post": {
+        "operationId": "ApiController_syncContacts",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncContactsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Import the platform’s address book for a channel",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/get-avatar": {
+      "post": {
+        "operationId": "ApiController_getContactAvatar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetContactAvatarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A contact’s avatar; the bytes are served from GET /storage/*",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/search": {
+      "post": {
+        "operationId": "ApiController_searchContacts",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchContactsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Search a channel’s contacts by name or number",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/block": {
+      "post": {
+        "operationId": "ApiController_blockContact",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlockContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Block a contact on the platform",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/unblock": {
+      "post": {
+        "operationId": "ApiController_unblockContact",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnblockContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Unblock a contact on the platform",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/contacts/update-status": {
+      "post": {
+        "operationId": "ApiController_updateContactStatus",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Store a contact’s status / about text",
+        "tags": [
+          "Contacts"
+        ]
+      }
+    },
+    "/api/kalagh/chats/get": {
+      "post": {
+        "operationId": "ApiController_getChat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetChatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "One chat by row id, or by platform id within a channel",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/list": {
+      "post": {
+        "operationId": "ApiController_getChats",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetChatsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A page of a channel’s chats",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/create": {
+      "post": {
+        "operationId": "ApiController_createChat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Create a chat (a group, where the platform has them)",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/update": {
+      "post": {
+        "operationId": "ApiController_updateChat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Rename a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/delete": {
+      "post": {
+        "operationId": "ApiController_deleteChat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteChatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Soft-delete a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/sync": {
+      "post": {
+        "operationId": "ApiController_syncChats",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncChatsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Import the platform’s chat list for a channel",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/get-avatar": {
+      "post": {
+        "operationId": "ApiController_getChatAvatar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetChatAvatarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A chat’s avatar; the bytes are served from GET /storage/*",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/get-participants": {
+      "post": {
+        "operationId": "ApiController_getChatParticipants",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetChatParticipantsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "The stored participants of a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/add-participant": {
+      "post": {
+        "operationId": "ApiController_addChatParticipant",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddChatParticipantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Add a participant to a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/remove-participant": {
+      "post": {
+        "operationId": "ApiController_removeChatParticipant",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveChatParticipantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Remove a participant from a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/mute": {
+      "post": {
+        "operationId": "ApiController_muteChat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MuteChatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Mute a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/unmute": {
+      "post": {
+        "operationId": "ApiController_unmuteChat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnmuteChatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Unmute a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/archive": {
+      "post": {
+        "operationId": "ApiController_archiveChat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArchiveChatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Archive a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/unarchive": {
+      "post": {
+        "operationId": "ApiController_unarchiveChat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnarchiveChatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Unarchive a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/pin": {
+      "post": {
+        "operationId": "ApiController_pinChat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PinChatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Pin a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/unpin": {
+      "post": {
+        "operationId": "ApiController_unpinChat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnpinChatDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Unpin a chat",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/mark-as-read": {
+      "post": {
+        "operationId": "ApiController_markChatAsRead",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkChatAsReadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Mark a whole chat as read",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/chats/search": {
+      "post": {
+        "operationId": "ApiController_searchChats",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchChatsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Search a channel’s chats by name",
+        "tags": [
+          "Chats"
+        ]
+      }
+    },
+    "/api/kalagh/messages/get": {
+      "post": {
+        "operationId": "ApiController_getMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetMessageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "One message by row id, or by platform id within a channel",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/list": {
+      "post": {
+        "operationId": "ApiController_getMessages",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetMessagesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A cursor page of a chat’s messages",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/attachments": {
+      "post": {
+        "operationId": "ApiController_getMessageAttachments",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetMessageAttachmentsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A cursor page of a chat’s file-bearing messages",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/send": {
+      "post": {
+        "operationId": "ApiController_sendMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Send a message carrying a whole MessageContent",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/send-location": {
+      "post": {
+        "operationId": "ApiController_sendLocation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendLocationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Send a location (or a venue, when name/address are given)",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/send-contact": {
+      "post": {
+        "operationId": "ApiController_sendContact",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Send a contact card (vCard)",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/send-poll": {
+      "post": {
+        "operationId": "ApiController_sendPoll",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendPollDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Send a poll — question plus 2..12 options",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/send-event": {
+      "post": {
+        "operationId": "ApiController_sendEvent",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Send a scheduled event",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/send-interactive": {
+      "post": {
+        "operationId": "ApiController_sendInteractive",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendInteractiveDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Send quick-reply buttons and/or a structured list",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/update": {
+      "post": {
+        "operationId": "ApiController_updateMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMessageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Edit a sent message’s text",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/delete": {
+      "post": {
+        "operationId": "ApiController_deleteMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteMessageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Delete a message for everyone",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/sync": {
+      "post": {
+        "operationId": "ApiController_syncMessages",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncMessagesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Pull a page of a chat’s history from the platform",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/sync-chat": {
+      "post": {
+        "operationId": "ApiController_syncChatMessages",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncMessagesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Alias of messages/sync, kept for existing callers",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/reply": {
+      "post": {
+        "operationId": "ApiController_replyMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplyMessageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Reply to a message, quoting it",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/forward": {
+      "post": {
+        "operationId": "ApiController_forwardMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForwardMessageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Forward a message to one or more chats",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/react": {
+      "post": {
+        "operationId": "ApiController_reactToMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReactToMessageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "React to a message with an emoji",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/remove-reaction": {
+      "post": {
+        "operationId": "ApiController_removeReaction",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveReactionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Remove a reaction from a message",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/search": {
+      "post": {
+        "operationId": "ApiController_searchMessages",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchMessagesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Search a channel’s messages, optionally within one chat",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/get-media": {
+      "post": {
+        "operationId": "ApiController_getMessageMedia",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetMessageMediaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Fetch a message’s media into provider storage and describe it",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/download-media": {
+      "post": {
+        "operationId": "ApiController_downloadMessageMedia",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetMessageMediaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Alias of messages/get-media, kept for existing callers",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/mark-as-read": {
+      "post": {
+        "operationId": "ApiController_markMessageAsRead",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkMessageAsReadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Mark one message — and the chat up to it — as read",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/mark-messages-as-read": {
+      "post": {
+        "operationId": "ApiController_markMessagesAsRead",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkMessageAsReadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Alias of messages/mark-as-read, kept for existing callers",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/history": {
+      "post": {
+        "operationId": "ApiController_getMessageHistory",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetMessageHistoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A page of stored messages before a given one — never starts a fetch",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/kalagh/messages/send-media": {
+      "post": {
+        "operationId": "ApiController_sendMedia",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Exactly one of chatId/contactId/phoneNumber/username identifies the recipient. Upload a single file as `file`, or several as repeated `files` parts.",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "channelId"
+                ],
+                "properties": {
+                  "channelId": {
+                    "type": "string",
+                    "example": "20261011-0931-0c28-7f3a-000000000045"
+                  },
+                  "chatId": {
+                    "type": "string",
+                    "example": "20261011-0932-0c29-7f3a-0000000000a1"
+                  },
+                  "contactId": {
+                    "type": "string"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "example": "+989121234567"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "caption": {
+                    "type": "string",
+                    "example": "The signed contract"
+                  },
+                  "messageType": {
+                    "type": "integer",
+                    "description": "MessageType — 2 Image, 4 Audio, 5 Voice, 6 Video, 7 Document. Derived from the file when absent.",
+                    "example": 7
+                  },
+                  "metadata": {
+                    "type": "string",
+                    "description": "JSON — per-platform side channel, e.g. {\"email\":{\"to\":[\"a@b.c\"],\"subject\":\"Hi\"}}"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "One attachment"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "Every attachment of a multi-file message (replaces `file` when present)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Send a message carrying one or more uploaded files",
+        "tags": [
+          "Media"
+        ]
+      }
+    },
+    "/api/kalagh/logs/list": {
+      "post": {
+        "operationId": "ApiController_getLogs",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetLogsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A page of a channel’s activity log",
+        "tags": [
+          "Logs"
+        ]
+      }
+    },
+    "/api/kalagh/logs/webhooks": {
+      "post": {
+        "operationId": "ApiController_getWebhookLogs",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetWebhookLogsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "A page of a channel’s webhook delivery log",
+        "tags": [
+          "Logs"
+        ]
+      }
+    },
+    "/storage/{path}": {
+      "get": {
+        "operationId": "StorageController_serveFile",
+        "parameters": [
+          {
+            "name": "path",
+            "required": true,
+            "in": "path",
+            "description": "The storage key, e.g. messages/{chatPlatformId}/{messagePlatformId}/{filename}",
+            "schema": {
+              "example": "messages/989121234567@s.whatsapp.net/3EB0C431C2/contract.pdf"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The file’s bytes, with its own content type"
+          }
+        },
+        "summary": "Serve a stored file’s bytes (public — no api key, downloads on demand)",
+        "tags": [
+          "Storage"
+        ],
+        "security": []
+      }
+    }
+  },
+  "info": {
+    "title": "Kalagh API",
+    "description": "Kalagh omnichannel messaging gateway — whatsapp",
+    "version": "2.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "api-key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    },
+    "schemas": {
+      "CreateChannelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "title": {
+            "type": "string",
+            "example": "My WhatsApp Line"
+          },
+          "webhookUrl": {
+            "type": "string",
+            "example": "https://example.com/webhooks/kalagh"
+          },
+          "raiseEvents": {
+            "type": "boolean",
+            "example": true
+          },
+          "logWebhook": {
+            "type": "boolean",
+            "example": true
+          },
+          "logLevel": {
+            "type": "number",
+            "example": 0
+          },
+          "syncHistory": {
+            "type": "boolean",
+            "example": true
+          },
+          "config": {
+            "type": "object",
+            "example": {
+              "ownNumber": "989121234567"
+            }
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "GetChannelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The channel row id",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The account the channel is connected as (own JID / user_id)",
+            "example": "989121230000@s.whatsapp.net"
+          }
+        }
+      },
+      "GetPlatformAliasesDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          }
+        },
+        "required": [
+          "channelId"
+        ]
+      },
+      "GetChannelsDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        }
+      },
+      "UpdateChannelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "title": {
+            "type": "string",
+            "example": "My WhatsApp Line"
+          },
+          "webhookUrl": {
+            "type": "string",
+            "example": "https://example.com/webhooks/kalagh"
+          },
+          "raiseEvents": {
+            "type": "boolean",
+            "example": true
+          },
+          "syncHistory": {
+            "type": "boolean",
+            "example": true
+          },
+          "logWebhook": {
+            "type": "boolean",
+            "example": true
+          },
+          "logLevel": {
+            "type": "number",
+            "example": 0
+          },
+          "config": {
+            "type": "object",
+            "example": {
+              "ownNumber": "989121234567"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "example": {
+              "owner": "sales"
+            }
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "PatchChannelCredentialsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "credentials": {
+            "type": "object",
+            "description": "Deep-merged over the stored credentials: objects merge, arrays and scalars replace",
+            "example": {
+              "signature": "<p>Kind regards</p>"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "credentials"
+        ]
+      },
+      "DeleteChannelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "TerminateChannelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "RestartChannelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "UnloadChannelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "RequestQRCodeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "GetContactDto": {
+        "type": "object",
+        "properties": {
+          "contactId": {
+            "type": "string",
+            "description": "The contact row id",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "channelId": {
+            "type": "string",
+            "description": "Required with platformId",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The platform's user id (JID / user_id); matches the alt id too",
+            "example": "989121234567@s.whatsapp.net"
+          }
+        }
+      },
+      "GetContactsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        },
+        "required": [
+          "channelId"
+        ]
+      },
+      "CreateContactDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+989121234567"
+          }
+        },
+        "required": [
+          "channelId",
+          "name",
+          "phone"
+        ]
+      },
+      "DeleteContactDto": {
+        "type": "object",
+        "properties": {
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          }
+        },
+        "required": [
+          "contactId"
+        ]
+      },
+      "SyncContactsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          }
+        },
+        "required": [
+          "channelId"
+        ]
+      },
+      "GetContactAvatarDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          }
+        },
+        "required": [
+          "channelId",
+          "contactId"
+        ]
+      },
+      "SearchContactsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "query": {
+            "type": "string",
+            "example": "invoice"
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        },
+        "required": [
+          "channelId",
+          "query"
+        ]
+      },
+      "BlockContactDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          }
+        },
+        "required": [
+          "channelId",
+          "contactId"
+        ]
+      },
+      "UnblockContactDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          }
+        },
+        "required": [
+          "channelId",
+          "contactId"
+        ]
+      },
+      "UpdateContactStatusDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "status": {
+            "type": "string",
+            "example": "Available"
+          }
+        },
+        "required": [
+          "channelId",
+          "contactId",
+          "status"
+        ]
+      },
+      "GetChatDto": {
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "description": "The chat row id",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "channelId": {
+            "type": "string",
+            "description": "Required with platformId",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The platform's chat id (JID / chat_id); matches the alt id too",
+            "example": "989121234567@s.whatsapp.net"
+          }
+        }
+      },
+      "GetChatsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        },
+        "required": [
+          "channelId"
+        ]
+      },
+      "CreateChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "name": {
+            "type": "string",
+            "example": "Project Falcon"
+          },
+          "participants": {
+            "example": [
+              "989121234567@s.whatsapp.net"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "channelId",
+          "name"
+        ]
+      },
+      "UpdateChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "name": {
+            "type": "string",
+            "example": "Project Falcon"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "DeleteChatDto": {
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "SyncChatsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          }
+        },
+        "required": [
+          "channelId"
+        ]
+      },
+      "GetChatAvatarDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "GetChatParticipantsDto": {
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "AddChatParticipantDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "participantId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "participantId"
+        ]
+      },
+      "RemoveChatParticipantDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "participantId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "participantId"
+        ]
+      },
+      "MuteChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "UnmuteChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "ArchiveChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "UnarchiveChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "PinChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "UnpinChatDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "MarkChatAsReadDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "SearchChatsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "query": {
+            "type": "string",
+            "example": "invoice"
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        },
+        "required": [
+          "channelId",
+          "query"
+        ]
+      },
+      "GetMessageDto": {
+        "type": "object",
+        "properties": {
+          "messageId": {
+            "type": "string",
+            "description": "The message row id",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "channelId": {
+            "type": "string",
+            "description": "Required with platformId",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "platformId": {
+            "type": "string",
+            "description": "The platform's message id, as carried on every provider event",
+            "example": "3EB0C431C26A1D1F4E2B"
+          }
+        }
+      },
+      "GetMessagesDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "cursor": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "GetMessageAttachmentsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "cursor": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          },
+          "types": {
+            "type": "array",
+            "description": "Defaults to every file-bearing type",
+            "example": [
+              2,
+              7
+            ],
+            "items": {
+              "type": "number",
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                99,
+                100
+              ]
+            }
+          },
+          "includeDeleted": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "MessageAttachmentLocationDto": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "example": 35.6892
+          },
+          "longitude": {
+            "type": "number",
+            "example": 51.389
+          },
+          "name": {
+            "type": "string",
+            "example": "Azadi Tower"
+          },
+          "address": {
+            "type": "string",
+            "example": "Azadi Square, Tehran"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ]
+      },
+      "MessagePollOptionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "4f9d2c0b8e1a6d3f5c7b9a0e2d4f6180a3c5e7b9d1f3058a2c4e6b8d0f204161"
+          },
+          "title": {
+            "type": "string",
+            "example": "Monday"
+          },
+          "voteCount": {
+            "type": "number",
+            "example": 2
+          },
+          "voters": {
+            "example": [
+              "989121234567@s.whatsapp.net"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "voteCount"
+        ]
+      },
+      "MessagePollDto": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "example": "Which day suits you?"
+          },
+          "selectableCount": {
+            "type": "number",
+            "example": 1
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessagePollOptionDto"
+            }
+          },
+          "totalVoterCount": {
+            "type": "number",
+            "example": 3
+          },
+          "isClosed": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "question",
+          "selectableCount",
+          "options"
+        ]
+      },
+      "MessageEventLocationDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Azadi Tower"
+          },
+          "address": {
+            "type": "string",
+            "example": "Azadi Square, Tehran"
+          },
+          "latitude": {
+            "type": "number",
+            "example": 35.6997
+          },
+          "longitude": {
+            "type": "number",
+            "example": 51.3381
+          }
+        }
+      },
+      "MessageEventResponderDto": {
+        "type": "object",
+        "properties": {
+          "participant": {
+            "type": "string",
+            "example": "989121234567@s.whatsapp.net"
+          },
+          "response": {
+            "type": "string",
+            "enum": [
+              "going",
+              "not_going",
+              "maybe"
+            ],
+            "example": "going"
+          },
+          "at": {
+            "type": "string",
+            "example": "2026-10-20T09:00:00.000Z"
+          }
+        },
+        "required": [
+          "participant",
+          "response"
+        ]
+      },
+      "MessageEventResponsesDto": {
+        "type": "object",
+        "properties": {
+          "going": {
+            "type": "number",
+            "example": 2
+          },
+          "notGoing": {
+            "type": "number",
+            "example": 1
+          },
+          "maybe": {
+            "type": "number",
+            "example": 0
+          },
+          "responders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageEventResponderDto"
+            }
+          }
+        },
+        "required": [
+          "going",
+          "notGoing",
+          "maybe"
+        ]
+      },
+      "MessageEventDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Quarterly review"
+          },
+          "description": {
+            "type": "string",
+            "example": "Numbers, then the roadmap"
+          },
+          "startAt": {
+            "type": "string",
+            "example": "2026-10-20T09:00:00.000Z"
+          },
+          "endAt": {
+            "type": "string",
+            "example": "2026-10-20T10:00:00.000Z"
+          },
+          "location": {
+            "$ref": "#/components/schemas/MessageEventLocationDto"
+          },
+          "joinLink": {
+            "type": "string",
+            "example": "https://meet.example.com/quarterly"
+          },
+          "isCancelled": {
+            "type": "boolean",
+            "example": false
+          },
+          "extraGuestsAllowed": {
+            "type": "boolean",
+            "example": false
+          },
+          "responses": {
+            "$ref": "#/components/schemas/MessageEventResponsesDto"
+          }
+        },
+        "required": [
+          "name",
+          "startAt"
+        ]
+      },
+      "MessageAttachmentDto": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "example": "contract.pdf"
+          },
+          "title": {
+            "type": "string",
+            "example": "Contract"
+          },
+          "description": {
+            "type": "string",
+            "example": "Signed copy"
+          },
+          "ext": {
+            "type": "string",
+            "example": "pdf"
+          },
+          "duration": {
+            "type": "number",
+            "example": 0
+          },
+          "width": {
+            "type": "number",
+            "example": 0
+          },
+          "height": {
+            "type": "number",
+            "example": 0
+          },
+          "size": {
+            "type": "number",
+            "example": 184320
+          },
+          "mimetype": {
+            "type": "string",
+            "example": "application/pdf"
+          },
+          "waveform": {
+            "type": "string",
+            "example": "AAECAwQFBgcICQ=="
+          },
+          "url": {
+            "type": "string",
+            "example": "https://provider.example.com/storage/messages/989121234567@s.whatsapp.net/3EB0C431C2/contract.pdf"
+          },
+          "fallbackUrl": {
+            "type": "string",
+            "example": "https://provider.example.com/storage/messages/989121234567@s.whatsapp.net/3EB0C431C2/contract.pdf"
+          },
+          "thumbnailBase64": {
+            "type": "string",
+            "example": "/9j/4AAQSkZJRgABAQAAAQ=="
+          },
+          "thumbnailUrl": {
+            "type": "string",
+            "example": "https://provider.example.com/storage/messages/989121234567@s.whatsapp.net/3EB0C431C2/contract.pdf"
+          },
+          "thumbnailFallbackUrl": {
+            "type": "string",
+            "example": "https://provider.example.com/storage/messages/989121234567@s.whatsapp.net/3EB0C431C2/contract.pdf"
+          },
+          "type": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "example": 6
+          },
+          "location": {
+            "$ref": "#/components/schemas/MessageAttachmentLocationDto"
+          },
+          "contact": {
+            "type": "object",
+            "example": {
+              "displayName": "John Doe",
+              "vcard": "BEGIN:VCARD\nVERSION:3.0\nFN:John Doe\nTEL;type=CELL;waid=989121234567:+98 912 123 4567\nEND:VCARD"
+            }
+          },
+          "poll": {
+            "$ref": "#/components/schemas/MessagePollDto"
+          },
+          "event": {
+            "$ref": "#/components/schemas/MessageEventDto"
+          },
+          "payload": {
+            "type": "string",
+            "example": "order-42"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "InteractiveButtonDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "yes"
+          },
+          "title": {
+            "type": "string",
+            "example": "Yes, please"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://example.com/offer"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+989121234567"
+          },
+          "callbackData": {
+            "type": "string",
+            "example": "offer:accept"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ]
+      },
+      "InteractiveListRowDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "plan-pro"
+          },
+          "title": {
+            "type": "string",
+            "example": "Pro"
+          },
+          "description": {
+            "type": "string",
+            "example": "Everything in Basic, plus reports"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ]
+      },
+      "InteractiveListSectionDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Plans"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractiveListRowDto"
+            }
+          }
+        },
+        "required": [
+          "rows"
+        ]
+      },
+      "InteractiveListDto": {
+        "type": "object",
+        "properties": {
+          "buttonText": {
+            "type": "string",
+            "example": "Choose a plan"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractiveListSectionDto"
+            }
+          }
+        },
+        "required": [
+          "sections"
+        ]
+      },
+      "InteractiveContentDto": {
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "string",
+            "example": "Pick a plan"
+          },
+          "body": {
+            "type": "string",
+            "example": "Which one fits you?"
+          },
+          "footer": {
+            "type": "string",
+            "example": "You can change it later"
+          },
+          "buttons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractiveButtonDto"
+            }
+          },
+          "list": {
+            "$ref": "#/components/schemas/InteractiveListDto"
+          },
+          "replyToButtonId": {
+            "type": "string",
+            "example": "yes"
+          },
+          "replyToListRowId": {
+            "type": "string",
+            "example": "plan-pro"
+          }
+        }
+      },
+      "MessageLiveLocationDto": {
+        "type": "object",
+        "properties": {
+          "sequenceNumber": {
+            "type": "number",
+            "example": 1
+          },
+          "accuracyInMeters": {
+            "type": "number",
+            "example": 12
+          },
+          "expiresAt": {
+            "type": "string",
+            "example": "2026-10-20T10:00:00.000Z"
+          }
+        }
+      },
+      "MessagePresentationDto": {
+        "type": "object",
+        "properties": {
+          "videoNote": {
+            "type": "boolean",
+            "example": false
+          },
+          "gif": {
+            "type": "boolean",
+            "example": false
+          },
+          "liveLocation": {
+            "$ref": "#/components/schemas/MessageLiveLocationDto"
+          },
+          "albumId": {
+            "type": "string",
+            "example": "3EB0C431C26A1D1F4E2B"
+          }
+        }
+      },
+      "MessageContentDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "number",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              99,
+              100
+            ],
+            "example": 1
+          },
+          "message": {
+            "type": "string",
+            "example": "Hello from Kalagh"
+          },
+          "forwarded": {
+            "type": "boolean",
+            "example": false
+          },
+          "edited": {
+            "type": "boolean",
+            "example": false
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageAttachmentDto"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Per-platform side channel, e.g. { email: { to, cc, bcc, subject } }",
+            "example": {
+              "email": {
+                "to": [
+                  "someone@example.com"
+                ],
+                "subject": "Hello"
+              }
+            }
+          },
+          "interactive": {
+            "$ref": "#/components/schemas/InteractiveContentDto"
+          },
+          "presentation": {
+            "$ref": "#/components/schemas/MessagePresentationDto"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "SendMessageDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+989121234567"
+          },
+          "username": {
+            "type": "string",
+            "example": "kalagh_support"
+          },
+          "content": {
+            "$ref": "#/components/schemas/MessageContentDto"
+          }
+        },
+        "required": [
+          "channelId",
+          "content"
+        ]
+      },
+      "SendLocationDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+989121234567"
+          },
+          "username": {
+            "type": "string",
+            "example": "kalagh_support"
+          },
+          "replyToMessageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "metadata": {
+            "type": "object",
+            "example": {
+              "email": {
+                "to": [
+                  "someone@example.com"
+                ],
+                "subject": "Hello"
+              }
+            }
+          },
+          "location": {
+            "$ref": "#/components/schemas/MessageAttachmentLocationDto"
+          }
+        },
+        "required": [
+          "channelId",
+          "location"
+        ]
+      },
+      "SendContactCardDto": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "vcard": {
+            "type": "string",
+            "example": "BEGIN:VCARD\nVERSION:3.0\nFN:John Doe\nTEL;type=CELL;waid=989121234567:+98 912 123 4567\nEND:VCARD"
+          }
+        },
+        "required": [
+          "displayName",
+          "vcard"
+        ]
+      },
+      "SendContactDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+989121234567"
+          },
+          "username": {
+            "type": "string",
+            "example": "kalagh_support"
+          },
+          "replyToMessageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "metadata": {
+            "type": "object",
+            "example": {
+              "email": {
+                "to": [
+                  "someone@example.com"
+                ],
+                "subject": "Hello"
+              }
+            }
+          },
+          "contact": {
+            "$ref": "#/components/schemas/SendContactCardDto"
+          }
+        },
+        "required": [
+          "channelId",
+          "contact"
+        ]
+      },
+      "SendPollOptionDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Monday"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "SendPollBodyDto": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "example": "Which day suits you?"
+          },
+          "selectableCount": {
+            "type": "number",
+            "example": 1
+          },
+          "options": {
+            "minItems": 2,
+            "maxItems": 12,
+            "example": [
+              {
+                "title": "Monday"
+              },
+              {
+                "title": "Tuesday"
+              },
+              {
+                "title": "Wednesday"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SendPollOptionDto"
+            }
+          }
+        },
+        "required": [
+          "question",
+          "selectableCount",
+          "options"
+        ]
+      },
+      "SendPollDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+989121234567"
+          },
+          "username": {
+            "type": "string",
+            "example": "kalagh_support"
+          },
+          "replyToMessageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "metadata": {
+            "type": "object",
+            "example": {
+              "email": {
+                "to": [
+                  "someone@example.com"
+                ],
+                "subject": "Hello"
+              }
+            }
+          },
+          "poll": {
+            "$ref": "#/components/schemas/SendPollBodyDto"
+          }
+        },
+        "required": [
+          "channelId",
+          "poll"
+        ]
+      },
+      "SendEventBodyDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Quarterly review"
+          },
+          "description": {
+            "type": "string",
+            "example": "Numbers, then the roadmap"
+          },
+          "startAt": {
+            "type": "string",
+            "example": "2026-10-20T09:00:00.000Z"
+          },
+          "endAt": {
+            "type": "string",
+            "example": "2026-10-20T10:00:00.000Z"
+          },
+          "location": {
+            "$ref": "#/components/schemas/MessageEventLocationDto"
+          },
+          "joinLink": {
+            "type": "string",
+            "example": "https://meet.example.com/quarterly"
+          },
+          "isCancelled": {
+            "type": "boolean",
+            "example": false
+          },
+          "extraGuestsAllowed": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "name",
+          "startAt"
+        ]
+      },
+      "SendEventDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+989121234567"
+          },
+          "username": {
+            "type": "string",
+            "example": "kalagh_support"
+          },
+          "replyToMessageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "metadata": {
+            "type": "object",
+            "example": {
+              "email": {
+                "to": [
+                  "someone@example.com"
+                ],
+                "subject": "Hello"
+              }
+            }
+          },
+          "event": {
+            "$ref": "#/components/schemas/SendEventBodyDto"
+          }
+        },
+        "required": [
+          "channelId",
+          "event"
+        ]
+      },
+      "SendInteractiveDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "contactId": {
+            "type": "string",
+            "example": "20261011-0933-0c30-7f3a-0000000000b7"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": "+989121234567"
+          },
+          "username": {
+            "type": "string",
+            "example": "kalagh_support"
+          },
+          "replyToMessageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "metadata": {
+            "type": "object",
+            "example": {
+              "email": {
+                "to": [
+                  "someone@example.com"
+                ],
+                "subject": "Hello"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "Which one fits you?"
+          },
+          "interactive": {
+            "example": {
+              "header": "Pick a plan",
+              "body": "Which one fits you?",
+              "footer": "You can change it later",
+              "buttons": [
+                {
+                  "id": "basic",
+                  "title": "Basic"
+                },
+                {
+                  "id": "pro",
+                  "title": "Pro"
+                }
+              ]
+            },
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InteractiveContentDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "channelId",
+          "interactive"
+        ]
+      },
+      "UpdateMessageDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "content": {
+            "type": "string",
+            "example": "The corrected text"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "messageId",
+          "content"
+        ]
+      },
+      "DeleteMessageDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "messageId"
+        ]
+      },
+      "SyncMessagesDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "cursor": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "ReplyMessageDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "content": {
+            "$ref": "#/components/schemas/MessageContentDto"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "messageId",
+          "content"
+        ]
+      },
+      "ForwardMessageDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "toChatIds": {
+            "example": [
+              "20261011-0932-0c29-7f3a-0000000000a1"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "messageId",
+          "toChatIds"
+        ]
+      },
+      "ReactToMessageDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "emoji": {
+            "type": "string",
+            "example": "👍"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "messageId",
+          "emoji"
+        ]
+      },
+      "RemoveReactionDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          },
+          "emoji": {
+            "type": "string",
+            "example": "👍"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "messageId",
+          "emoji"
+        ]
+      },
+      "SearchMessagesDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "query": {
+            "type": "string",
+            "example": "invoice"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          }
+        },
+        "required": [
+          "channelId",
+          "query"
+        ]
+      },
+      "GetMessageMediaDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "messageId"
+        ]
+      },
+      "MarkMessageAsReadDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId",
+          "messageId"
+        ]
+      },
+      "GetMessageHistoryDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "chatId": {
+            "type": "string",
+            "example": "20261011-0932-0c29-7f3a-0000000000a1"
+          },
+          "messageId": {
+            "type": "string",
+            "example": "20261011-0934-0c31-7f3a-0000000000c3"
+          }
+        },
+        "required": [
+          "channelId",
+          "chatId"
+        ]
+      },
+      "GetLogsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "example": 50
+          },
+          "level": {
+            "type": "number",
+            "example": 3
+          },
+          "action": {
+            "type": "string",
+            "example": "messages/send"
+          }
+        },
+        "required": [
+          "channelId"
+        ]
+      },
+      "GetWebhookLogsDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "example": "20261011-0931-0c28-7f3a-000000000045"
+          },
+          "page": {
+            "type": "number",
+            "example": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "example": 50
+          },
+          "status": {
+            "type": "number",
+            "example": 200
+          },
+          "action": {
+            "type": "string",
+            "example": "messages/send"
+          }
+        },
+        "required": [
+          "channelId"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "api-key": []
+    }
+  ]
+}

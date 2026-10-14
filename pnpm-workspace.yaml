@@ -1,0 +1,6 @@
+# Packages allowed to run install scripts (pnpm 10+ approval). esbuild
+# verifies its platform binary; protobufjs's postinstall is only a version
+# check and nothing needs it.
+allowBuilds:
+  esbuild: true
+  protobufjs: false

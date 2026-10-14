@@ -1,0 +1,1310 @@
+syntax = "proto3";
+
+package kalagh;
+
+// ============================================================================
+// Common Types
+// ============================================================================
+
+message Empty {}
+
+message OperationResult {
+  bool success = 1;
+  string message = 2;
+  map<string, string> errors = 3;
+}
+
+// ============================================================================
+// Channel Messages
+// ============================================================================
+
+message CreateChannelRequest {
+  string id = 1;              // Optional channel ID
+  string title = 2;           // Channel display title
+  // Note: provider/platform is determined by backend environment, not client
+  map<string, string> config = 3;
+  // DEPRECATED alias of `webhookUrl`, kept so existing clients keep working.
+  // Nothing mapped it to the facade's `webhookUrl`, so a channel created over
+  // gRPC with only this field set was created with NO webhook — the same gap
+  // UpdateChannel already carries a mapping for. An explicit webhookUrl wins.
+  string webhook = 4 [deprecated = true];
+  bool syncHistory = 5;
+  bool raiseEvents = 6;
+  bool logWebhook = 7;
+  int32 logLevel = 8;
+  // The facade's own field name (CreateChannelReq.webhookUrl).
+  string webhookUrl = 9;
+}
+
+message CreateChannelResponse {
+  string channelId = 1;
+  string qrCode = 2;
+  int32 state = 3;
+  string message = 4;
+}
+
+// Single-record getters accept EITHER our own row id or the upstream platform
+// id — an external caller usually holds the latter, not our UUID.
+message GetChannelRequest {
+  string id = 1;
+  string platformId = 2;
+}
+
+message Channel {
+  string id = 1;
+  string title = 2;
+  string platformId = 3;
+  int32 platform = 4;
+  int32 state = 5;
+  string qrCode = 6;
+  string webhookUrl = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+  map<string, string> metadata = 10;
+  ChannelStats stats = 11;
+}
+
+message ChannelStats {
+  int32 chats = 1;
+  int32 contacts = 2;
+  int32 messages = 3;
+}
+
+message GetChannelResponse {
+  Channel channel = 1;
+}
+
+// An identity pairing the PLATFORM asserted — a WhatsApp privacy LID and its
+// phone JID, for instance. Observed on a contact or chat row, never inferred.
+// Published so a consumer can reconcile identities it recorded separately;
+// nobody downstream may merge two humans on a heuristic.
+message PlatformAlias {
+  string platformId = 1;
+  string altPlatformId = 2;
+  string source = 3;
+}
+
+message GetPlatformAliasesRequest {
+  string channelId = 1;
+}
+
+message GetPlatformAliasesResponse {
+  repeated PlatformAlias aliases = 1;
+  int32 total = 2;
+}
+
+message GetChannelsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message GetChannelsResponse {
+  repeated Channel channels = 1;
+  int32 total = 2;
+}
+
+message UpdateChannelRequest {
+  string id = 1;
+  string title = 2;
+  // Legacy name. Every other layer calls this webhookUrl, and the facade only
+  // ever read webhookUrl — so a gRPC caller setting `webhook` had it silently
+  // dropped. Kept at field 3 so existing clients still compile; the controller
+  // now maps it onto webhookUrl when that is not set.
+  string webhook = 3;
+  map<string, string> config = 4;
+  bool syncHistory = 5;
+  bool raiseEvents = 6;
+  bool logWebhook = 7;
+  int32 logLevel = 8;
+  string webhookUrl = 9;
+}
+
+message UpdateChannelResponse {
+  string channelId = 1;
+  string message = 2;
+}
+
+// Deep-merged over the channel's stored credentials (objects merge, arrays and
+// scalars replace). `credentials` is a JSON object, as a string.
+message PatchChannelCredentialsRequest {
+  string id = 1;
+  string credentials = 2;
+}
+
+message PatchChannelCredentialsResponse {
+  string channelId = 1;
+  // Whether a running session took the change now; otherwise on its next connect.
+  bool sessionUpdated = 2;
+}
+
+message DeleteChannelRequest {
+  string id = 1;
+}
+
+message DeleteChannelResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================================================
+// Contact Messages
+// ============================================================================
+
+message GetContactRequest {
+  string contactId = 1;
+  string channelId = 2;
+  string platformId = 3;
+}
+
+message GetContactResponse {
+  Contact contact = 1;
+}
+
+message GetContactsRequest {
+  string channelId = 1;
+  int32 page = 2;
+  int32 limit = 3;
+}
+
+message Contact {
+  string id = 1;
+  string platformId = 2;
+  string name = 3;
+  string phoneNumber = 4;
+  string avatarUrl = 5;
+  bool isBlocked = 6;
+  string status = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+  string deletedAt = 10;
+  map<string, string> metadata = 11;
+}
+
+message GetContactsResponse {
+  repeated Contact contacts = 1;
+  int32 total = 2;
+}
+
+message CreateContactRequest {
+  string channelId = 1;
+  string name = 2;
+  // DEPRECATED alias of `phone`: the facade's CreateContactReq calls it
+  // `phone`, so a contact created over gRPC arrived with no number at all.
+  // An explicit `phone` wins.
+  string phoneNumber = 3 [deprecated = true];
+  string phone = 4;
+}
+
+message CreateContactResponse {
+  Contact contact = 1;
+}
+
+message UpdateContactRequest {
+  string channelId = 1;
+  string contactId = 2;
+  string name = 3;
+}
+
+message UpdateContactResponse {
+  Contact contact = 1;
+}
+
+message DeleteContactRequest {
+  string channelId = 1;
+  string contactId = 2;
+}
+
+message DeleteContactResponse {
+  bool success = 1;
+}
+
+message SyncContactsRequest {
+  string channelId = 1;
+}
+
+message SyncContactsResponse {
+  // DEPRECATED — never populated. The facade answers a COUNT: a sync imports
+  // the platform's address book into the provider's own store and the rows are
+  // then read with GetContacts, so these two were always empty here.
+  repeated Contact contacts = 1 [deprecated = true];
+  int32 total = 2 [deprecated = true];
+  // How many contacts the sync imported. This is the answer.
+  int32 count = 3;
+}
+
+message GetContactAvatarRequest {
+  string channelId = 1;
+  string contactId = 2;
+}
+
+message GetContactAvatarResponse {
+  bytes avatar = 1;
+  string mimeType = 2;
+}
+
+message SearchContactsRequest {
+  string channelId = 1;
+  string query = 2;
+  int32 limit = 3;
+}
+
+message SearchContactsResponse {
+  repeated Contact contacts = 1;
+}
+
+message BlockContactRequest {
+  string channelId = 1;
+  string contactId = 2;
+}
+
+message BlockContactResponse {
+  bool success = 1;
+}
+
+message UnblockContactRequest {
+  string channelId = 1;
+  string contactId = 2;
+}
+
+message UnblockContactResponse {
+  bool success = 1;
+}
+
+message UpdateContactStatusRequest {
+  string channelId = 1;
+  string contactId = 2;
+  string status = 3;
+}
+
+message UpdateContactStatusResponse {
+  Contact contact = 1;
+}
+
+// ============================================================================
+// Chat Messages
+// ============================================================================
+
+message GetChatRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string platformId = 3;
+}
+
+message Chat {
+  string id = 1;
+  string platformId = 2;
+  string name = 3;
+  string avatarUrl = 4;
+  bool isGroup = 5;
+  bool isMuted = 6;
+  bool isArchived = 7;
+  bool isPinned = 8;
+  int32 unreadCount = 9;
+  string lastMessageAt = 10;
+  string createdAt = 11;
+  string updatedAt = 12;
+  repeated string allowedReactions = 13;
+  bool isSecret = 14;
+  string deletedAt = 15;
+  // Who a one-to-one chat is WITH, when the chat's own platformId is not that
+  // person (an email thread is keyed by its root Message-ID). Empty on
+  // platforms where the chat id IS the peer id.
+  string contactPlatformId = 16;
+  // The one-to-one counterpart is an automated account (a bot): the chat is a
+  // conversation, its counterpart never a contact. False for a person, for a
+  // group, and while the provider has not established it.
+  bool counterpartIsAutomated = 17;
+}
+
+message GetChatResponse {
+  Chat chat = 1;
+}
+
+message GetChatsRequest {
+  string channelId = 1;
+  int32 page = 2;
+  int32 limit = 3;
+}
+
+message GetChatsResponse {
+  repeated Chat chats = 1;
+  int32 total = 2;
+}
+
+message CreateChatRequest {
+  string channelId = 1;
+  string name = 2;
+  // DEPRECATED alias of `participants`: the facade's CreateChatReq calls it
+  // `participants`, so a group created over gRPC was created EMPTY. A
+  // non-empty `participants` wins.
+  repeated string participantIds = 3 [deprecated = true];
+  // The platform ids (JIDs / user ids) to open the chat with.
+  repeated string participants = 4;
+}
+
+message CreateChatResponse {
+  Chat chat = 1;
+}
+
+message UpdateChatRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string name = 3;
+}
+
+message UpdateChatResponse {
+  Chat chat = 1;
+}
+
+message DeleteChatRequest {
+  string channelId = 1;
+  string chatId = 2;
+}
+
+message DeleteChatResponse {
+  bool success = 1;
+}
+
+message SyncChatsRequest {
+  string channelId = 1;
+}
+
+message SyncChatsResponse {
+  // DEPRECATED — never populated, for the same reason as
+  // SyncContactsResponse: the rows land in the provider's store and are read
+  // with GetChats.
+  repeated Chat chats = 1 [deprecated = true];
+  int32 total = 2 [deprecated = true];
+  // How many chats the sync imported. This is the answer.
+  int32 count = 3;
+}
+
+message GetChatAvatarRequest {
+  string channelId = 1;
+  string chatId = 2;
+}
+
+message GetChatAvatarResponse {
+  bytes avatar = 1;
+  string mimeType = 2;
+}
+
+message GetChatParticipantsRequest {
+  string channelId = 1;
+  string chatId = 2;
+}
+
+// A `chat_participants` row. `contactId` is the provider's own contact UUID —
+// the roster is a list of CONTACTS, not of raw platform ids, which is what lets
+// a consumer put a name on a group message's sender. `leftAt` is set when the
+// member left; the row is never deleted, so historical messages still resolve.
+// One row of a chat's roster — the provider's `ChatParticipant`.
+message Participant {
+  string id = 1;
+  string name = 2;
+  string role = 3;
+  string contactId = 4;
+  string chatId = 5;
+  string channelId = 6;
+  string leftAt = 7;
+  // THE CONTACT'S IDENTIFIERS, joined in from `contacts`, and the reason the
+  // roster is worth reading: a message carries its sender as a PLATFORM id
+  // (usually a WhatsApp LID) while the row above is keyed by our contact UUID,
+  // so putting a name on a group message needs both. `altPlatformId` is what
+  // makes a LID-addressed message match a phone-JID-keyed contact. They were
+  // missing here, so a gRPC client could not name a group sender at all.
+  string platformId = 8;
+  string altPlatformId = 9;
+  string avatarUrl = 10;
+}
+
+message GetChatParticipantsResponse {
+  repeated Participant participants = 1;
+}
+
+message AddChatParticipantRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string participantId = 3;
+}
+
+message AddChatParticipantResponse {
+  bool success = 1;
+}
+
+message RemoveChatParticipantRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string participantId = 3;
+}
+
+message RemoveChatParticipantResponse {
+  bool success = 1;
+}
+
+message MuteChatRequest {
+  string channelId = 1;
+  string chatId = 2;
+}
+
+message MuteChatResponse {
+  bool success = 1;
+}
+
+message UnmuteChatRequest {
+  string channelId = 1;
+  string chatId = 2;
+}
+
+message UnmuteChatResponse {
+  bool success = 1;
+}
+
+message ArchiveChatRequest {
+  string channelId = 1;
+  string chatId = 2;
+}
+
+message ArchiveChatResponse {
+  bool success = 1;
+}
+
+message UnarchiveChatRequest {
+  string channelId = 1;
+  string chatId = 2;
+}
+
+message UnarchiveChatResponse {
+  bool success = 1;
+}
+
+message PinChatRequest {
+  string channelId = 1;
+  string chatId = 2;
+}
+
+message PinChatResponse {
+  bool success = 1;
+}
+
+message UnpinChatRequest {
+  string channelId = 1;
+  string chatId = 2;
+}
+
+message UnpinChatResponse {
+  bool success = 1;
+}
+
+message MarkChatAsReadRequest {
+  string channelId = 1;
+  string chatId = 2;
+}
+
+message MarkChatAsReadResponse {
+  bool success = 1;
+}
+
+message SearchChatsRequest {
+  string channelId = 1;
+  string query = 2;
+  int32 limit = 3;
+}
+
+message SearchChatsResponse {
+  repeated Chat chats = 1;
+}
+
+// ============================================================================
+// Message Messages
+// ============================================================================
+
+message GetMessageRequest {
+  string messageId = 1;
+  string channelId = 2;
+  string platformId = 3;
+}
+
+message GetMessageResponse {
+  Message message = 1;
+}
+
+message GetMessagesRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string cursor = 3;
+  int32 limit = 4;
+}
+
+message Message {
+  string id = 1;
+  string platformId = 2;
+  string chatId = 3;
+  // Declared from the start and NEVER POPULATED — the row this response is built
+  // from has no `senderId` property. Left in place because removing a field from
+  // a published interface breaks a client we cannot see; use `senderPlatformId`
+  // (field 24) instead.
+  string senderId = 4;
+  // ATTRIBUTION, NOT IDENTITY: the sender's display name, from the row's
+  // `sender_name`. Set for a group, supergroup or channel sender — who has a
+  // name on their bubble and no contact row anywhere — and empty in a private
+  // chat, where the name comes from the chat's own contact. Emitted since the
+  // attribution columns landed; before that this was always empty.
+  string senderName = 5;
+  string content = 6;
+  int32 messageType = 7;
+  string timestamp = 8;
+  bool isFromMe = 9;
+  int32 status = 10;
+  repeated Reaction reactions = 11;
+  string mediaUrl = 12;
+  string mimeType = 13;
+  int64 mediaSize = 14;
+  string replyToId = 15;
+  // Field numbers 16 and 17 previously held selfDestructType (string) and
+  // selfDestructTime (int32). Replaced by structured Destructive + CallInfo
+  // top-level fields below.
+  reserved 16, 17;
+  reserved "selfDestructType", "selfDestructTime";
+  string deletionReason = 18;
+  string deletedAt = 19;
+  string editedAt = 20;
+  repeated MessageAttachment attachments = 21;
+  Destructive destructive = 22;
+  CallInfo call = 23;
+  // The sender's platform id, for DISPLAY ONLY: an opaque per-sender key a
+  // client groups a run of messages by. It is not an identity and must never be
+  // resolved into a contact — that is `contactId` on the contact endpoints, and
+  // the provider withholds it for a room on purpose.
+  string senderPlatformId = 24;
+}
+
+// Self-destruct metadata for a message (Telegram-style ephemeral messages).
+// type uses the SelfDestructType enum (Unknown=0, Timer=1, Immediate=2).
+// time is the absolute moment the message will/did self-destruct (ISO-8601 string).
+message Destructive {
+  int32 type = 1;
+  string time = 2;
+}
+
+// Structured call metadata for MessageType.Call messages.
+// status uses the CallStatus enum, type uses the CallType enum (Incoming=1,
+// Outgoing=2). date is ISO-8601.
+message CallInfo {
+  string from = 1;
+  string id = 2;
+  string date = 3;
+  bool offline = 4;
+  int32 status = 5;
+  bool isVideo = 6;
+  bool isGroup = 7;
+  int32 duration = 8;
+  int32 type = 9;
+}
+
+message Reaction {
+  string emoji = 1;
+  repeated string userIds = 2;
+}
+
+message GetMessagesResponse {
+  repeated Message messages = 1;
+  string nextCursor = 2;
+  int32 total = 3;
+  // A background history fetch for this chat is running (started or joined by
+  // this request); the messages it brings arrive on `message.sync` events, and
+  // `chat.history.loaded` is the edge that says it finished. Opening a chat
+  // never blocks on the platform, so a client renders this page immediately and
+  // shows a loading row while this is true.
+  // camelCase like every other field in this file: the gRPC transport is
+  // wired with proto-loader's default `keepCase: false`, so a snake_case name
+  // would arrive as `historyLoading` anyway — spelling it that way here keeps
+  // the proto and the TypeScript the same word.
+  bool historyLoading = 4;
+}
+
+// The attachment-bearing messages of one chat, newest first. `types` narrows
+// the file kinds (MessageType values); empty means every file-bearing type.
+message GetMessageAttachmentsRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string cursor = 3;
+  int32 limit = 4;
+  repeated int32 types = 5;
+  bool includeDeleted = 6;
+}
+
+message GetMessageAttachmentsResponse {
+  repeated Message messages = 1;
+  string nextCursor = 2;
+  int32 total = 3;
+}
+
+// File attachment for gRPC binary media
+message MessageFile {
+  bytes buffer = 1;
+  string mimetype = 2;
+  string originalname = 3;
+}
+
+// Location information. `name`/`address` are the PLACE, when the platform
+// states it — a venue card and a live-location bubble print them above the
+// coordinates. Empty when the share is bare coordinates.
+message Location {
+  double latitude = 1;
+  double longitude = 2;
+  string name = 3;
+  string address = 4;
+}
+
+// Contact information
+message ContactInfo {
+  string displayName = 1;
+  string vcard = 2;
+}
+
+// One option of a poll, with its running tally. `id` is the lowercase hex
+// SHA-256 of `title` — the only thing a WhatsApp vote carries, so it is the
+// option's identity on the wire. `voters` holds platformIds on the provider
+// side and CENTRAL CONTACT IDS centrally; a platformId never reaches a client.
+message PollOption {
+  string id = 1;
+  string title = 2;
+  int32 voteCount = 3;
+  repeated string voters = 4;
+}
+
+// A poll: question, options and the current tally. Always a SNAPSHOT.
+// selectableCount 1 = single choice, >1 = the voter may pick up to that many.
+message Poll {
+  string question = 1;
+  int32 selectableCount = 2;
+  repeated PollOption options = 3;
+  int32 totalVoterCount = 4;
+  bool isClosed = 5;
+}
+
+// Where an event takes place; every field optional.
+message EventLocation {
+  string name = 1;
+  string address = 2;
+  double latitude = 3;
+  double longitude = 4;
+}
+
+// One invitee's answer. `response` is 'going' | 'not_going' | 'maybe'.
+// `participant` is a platformId on the provider side, a central contact id
+// centrally. `at` is ISO-8601.
+message EventResponder {
+  string participant = 1;
+  string response = 2;
+  string at = 3;
+}
+
+// The current RSVP tally of an event. Always a SNAPSHOT.
+message EventResponses {
+  int32 going = 1;
+  int32 notGoing = 2;
+  int32 maybe = 3;
+  repeated EventResponder responders = 4;
+}
+
+// A scheduled event posted into a chat. startAt/endAt are ISO-8601.
+message EventInfo {
+  string name = 1;
+  string description = 2;
+  string startAt = 3;
+  string endAt = 4;
+  EventLocation location = 5;
+  string joinLink = 6;
+  bool isCancelled = 7;
+  bool extraGuestsAllowed = 8;
+  EventResponses responses = 9;
+}
+
+// Message attachment
+message MessageAttachment {
+  string filename = 1;
+  string title = 2;
+  bytes buffer = 3;
+  string description = 4;
+  string ext = 5;
+  int32 duration = 6;
+  int32 width = 7;
+  int32 height = 8;
+  int64 size = 9;
+  string mimetype = 10;
+  string waveform = 11;
+  string url = 12;
+  string fallbackUrl = 13;
+  string thumbnailBase64 = 14;
+  string thumbnailUrl = 15;
+  string thumbnailFallbackUrl = 16;
+  int32 type = 17;  // AttachmentType enum
+  Location location = 18;
+  ContactInfo contact = 19;
+  string payload = 20;
+  // Set on an AttachmentType.Poll attachment (message type MessageType.Poll).
+  Poll poll = 21;
+  // Set on an AttachmentType.Event attachment (message type MessageType.Event).
+  EventInfo event = 22;
+}
+
+// Quick-reply button. `url` opens a link instead of replying; `phoneNumber`
+// starts a call (WhatsApp only); `callbackData` is the Telegram inline-keyboard
+// hint.
+message InteractiveButton {
+  string id = 1;
+  string title = 2;
+  string url = 3;
+  string phoneNumber = 4;
+  string callbackData = 5;
+}
+
+// One row inside an interactive list section.
+message InteractiveListRow {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+}
+
+// Grouping of list rows; a WhatsApp list always carries at least one section.
+message InteractiveListSection {
+  string title = 1;
+  repeated InteractiveListRow rows = 2;
+}
+
+// `buttonText` is the label on the "open list" CTA (a WhatsApp UX hint).
+message InteractiveList {
+  string buttonText = 1;
+  repeated InteractiveListSection sections = 2;
+}
+
+// Interactive UI attached to a message — quick-reply buttons and/or a
+// structured list. `replyToButtonId` / `replyToListRowId` are set on INCOMING
+// messages that answer an earlier prompt.
+message InteractiveContent {
+  string header = 1;
+  string body = 2;
+  string footer = 3;
+  repeated InteractiveButton buttons = 4;
+  InteractiveList list = 5;
+  string replyToButtonId = 6;
+  string replyToListRowId = 7;
+}
+
+// A live location share: the coordinates stay on the attachment, this says they
+// move. `expiresAt` is ISO-8601.
+message LiveLocation {
+  int32 sequenceNumber = 1;
+  int32 accuracyInMeters = 2;
+  string expiresAt = 3;
+}
+
+// Platform-NEUTRAL rendering hints. A round video note is a WhatsApp PTV and a
+// Telegram video_note; a GIF is a looping muted video on both — so a client
+// draws the bubble from these and never from a per-platform key.
+message MessagePresentation {
+  bool videoNote = 1;
+  bool gif = 2;
+  LiveLocation liveLocation = 3;
+  string albumId = 4;
+}
+
+// Message content structure for sending messages
+message MessageContent {
+  int32 type = 1;  // MessageType enum
+  string message = 2;
+  MessageFile file = 3;
+  bool forwarded = 4;
+  bool edited = 5;
+  repeated MessageAttachment attachments = 6;
+  // Quick-reply buttons / list. Declared late: a gRPC client could not send an
+  // interactive prompt at all while this was missing, so every playbook choice
+  // question went out over gRPC as plain text.
+  InteractiveContent interactive = 7;
+  // The per-platform side channel (`MessageContent.metadata`) as a JSON OBJECT
+  // STRING — proto has no free-form object type here (no google.protobuf.Struct
+  // import) and a map<string,string> cannot carry a nested value. Same
+  // convention as SendMediaRequest.metadata. The gRPC controller parses it; a
+  // malformed value is refused rather than silently dropped.
+  string metadata = 8;
+  // Platform-neutral rendering hints (round video note, GIF, live location,
+  // album).
+  MessagePresentation presentation = 9;
+}
+
+message SendMessageRequest {
+  string channelId = 1;
+  // Exactly ONE of chatId/contactId/phoneNumber/username identifies the
+  // recipient (validated server-side in MessageService.sendMessage); the
+  // provider resolves it to a platform id (JID/LID). chatId/contactId are our
+  // row UUIDs (= the provider's chat/contact UUIDs); phoneNumber addresses a
+  // peer with no prior chat (provider verifies registration); username is a
+  // provider username (e.g. Telegram).
+  string chatId = 2;
+  MessageContent content = 3;
+  string contactId = 4;
+  string phoneNumber = 5;
+  string username = 6;
+}
+
+message SendMessageResponse {
+  Message message = 1;
+}
+
+// ── Dedicated structured sends ───────────────────────────────────────────────
+//
+// One rpc per structured type, beside SendMessage (which is unchanged and takes
+// a whole MessageContent). Each carries the SAME four recipient forms as
+// SendMessageRequest — exactly one is set — plus the reply target and the
+// per-platform metadata side channel, and each returns SendMessageResponse.
+//
+// They build the same MessageContent the generic rpc would carry and go down
+// the same send path, so a platform that cannot send the type refuses exactly
+// as it refuses the generic rpc.
+
+// The targeting every structured send shares. Inlined into each request rather
+// than nested, so a gRPC caller fills the same top-level fields it already
+// fills for SendMessage.
+message SendLocationRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string contactId = 3;
+  string phoneNumber = 4;
+  string username = 5;
+  // Our row UUID of the message being replied to; requires chatId.
+  string replyToMessageId = 6;
+  // The per-platform side channel as a JSON OBJECT STRING, same convention as
+  // MessageContent.metadata.
+  string metadata = 7;
+  Location location = 8;
+}
+
+message SendContactRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string contactId = 3;
+  string phoneNumber = 4;
+  string username = 5;
+  string replyToMessageId = 6;
+  string metadata = 7;
+  ContactInfo contact = 8;
+}
+
+// Only the TITLE of an option is the caller's to state: the id is derived from
+// it (the hex SHA-256 a WhatsApp vote carries) and a new poll's tally is zero.
+message SendPollOption {
+  string title = 1;
+}
+
+message SendPollBody {
+  string question = 1;
+  // 1 = single choice, >1 = the voter may pick up to this many.
+  int32 selectableCount = 2;
+  repeated SendPollOption options = 3;
+}
+
+message SendPollRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string contactId = 3;
+  string phoneNumber = 4;
+  string username = 5;
+  string replyToMessageId = 6;
+  string metadata = 7;
+  SendPollBody poll = 8;
+}
+
+// An event to SEND — EventInfo without `responses`, because an RSVP tally is
+// the platform's answer and not the sender's claim.
+message SendEventBody {
+  string name = 1;
+  string description = 2;
+  string startAt = 3;
+  string endAt = 4;
+  EventLocation location = 5;
+  string joinLink = 6;
+  bool isCancelled = 7;
+  bool extraGuestsAllowed = 8;
+}
+
+message SendEventRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string contactId = 3;
+  string phoneNumber = 4;
+  string username = 5;
+  string replyToMessageId = 6;
+  string metadata = 7;
+  SendEventBody event = 8;
+}
+
+message SendInteractiveRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string contactId = 3;
+  string phoneNumber = 4;
+  string username = 5;
+  string replyToMessageId = 6;
+  string metadata = 7;
+  // The prompt's body; interactive.body wins when both are set.
+  string message = 8;
+  InteractiveContent interactive = 9;
+}
+
+message UpdateMessageRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string messageId = 3;
+  string content = 4;
+}
+
+message UpdateMessageResponse {
+  Message message = 1;
+}
+
+message DeleteMessageRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string messageId = 3;
+}
+
+message DeleteMessageResponse {
+  bool success = 1;
+}
+
+message SyncMessagesRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string cursor = 3;
+  int32 limit = 4;
+}
+
+message SyncMessagesResponse {
+  repeated Message messages = 1;
+  string nextCursor = 2;
+}
+
+message ReplyMessageRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string messageId = 3;
+  MessageContent content = 4;
+}
+
+message ReplyMessageResponse {
+  Message message = 1;
+}
+
+message ForwardMessageRequest {
+  string channelId = 1;
+  // DEPRECATED alias of `chatId`: the facade's ForwardMessageReq calls the
+  // SOURCE chat `chatId`, so a forward over gRPC had no source chat and could
+  // not resolve the message. An explicit `chatId` wins.
+  string fromChatId = 2 [deprecated = true];
+  string messageId = 3;
+  repeated string toChatIds = 4;
+  // The chat the message is forwarded FROM.
+  string chatId = 5;
+}
+
+message ForwardMessageResponse {
+  repeated Message messages = 1;
+}
+
+message ReactToMessageRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string messageId = 3;
+  string emoji = 4;
+}
+
+message ReactToMessageResponse {
+  bool success = 1;
+}
+
+message RemoveReactionRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string messageId = 3;
+  string emoji = 4;
+}
+
+message RemoveReactionResponse {
+  bool success = 1;
+}
+
+message SearchMessagesRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string query = 3;
+  int32 limit = 4;
+}
+
+message SearchMessagesResponse {
+  repeated Message messages = 1;
+}
+
+message GetMessageMediaRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string messageId = 3;
+}
+
+message GetMessageMediaResponse {
+  bytes mediaData = 1;
+  string mimeType = 2;
+  string filename = 3;
+}
+
+message DownloadMessageMediaRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string messageId = 3;
+}
+
+message DownloadMessageMediaResponse {
+  // The media's path on the provider's HTTP port, `/storage/<key>` — a path,
+  // not an absolute URL, because the provider does not know the public host it
+  // is reached through. Prefix it with the API base URL to fetch the file.
+  string downloadUrl = 1;
+  // The same bytes and description GetMessageMedia answers, so a caller does
+  // not need a second HTTP round trip to read the file.
+  bytes mediaData = 2;
+  string mimeType = 3;
+  string filename = 4;
+}
+
+message MarkMessageAsReadRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string messageId = 3;
+}
+
+message MarkMessageAsReadResponse {
+  bool success = 1;
+}
+
+message MarkMessagesAsReadRequest {
+  string channelId = 1;
+  string chatId = 2;
+  // DEPRECATED. MarkMessagesAsRead is the facade's ALIAS of MarkMessageAsRead:
+  // it marks ONE message and the chat up to it, so a list was never read by
+  // any handler and every call marked the chat with an empty receipt. Kept for
+  // existing clients; the handler now honours its LAST entry when `messageId`
+  // is absent, since "read up to here" wants the newest of them.
+  repeated string messageIds = 3 [deprecated = true];
+  // The message read, exactly as MarkMessageAsReadRequest carries it.
+  string messageId = 4;
+}
+
+message MarkMessagesAsReadResponse {
+  bool success = 1;
+}
+
+message GetMessageHistoryRequest {
+  string channelId = 1;
+  string chatId = 2;
+  string messageId = 3;
+}
+
+message GetMessageHistoryResponse {
+  repeated Message messages = 1;
+}
+
+// ============================================================================
+// Media Messages
+// ============================================================================
+
+message SendMediaRequest {
+  string channelId = 1;
+  // Exactly one of chatId/contactId/phoneNumber/username identifies the
+  // recipient (same resolution as SendMessageRequest).
+  string chatId = 2;
+  MessageFile file = 3;
+  string caption = 4;
+  int32 messageType = 5;
+  string contactId = 6;
+  string phoneNumber = 7;
+  string username = 8;
+  // Every attachment of a message that carries more than one — an email with
+  // three files is ONE mail. When set it replaces `file`; platforms limited to
+  // one attachment per message keep using `file`.
+  repeated MessageFile files = 9;
+  // Per-platform side channel as JSON, forwarded onto the outgoing
+  // MessageContent. The email provider reads `metadata.email` for the SMTP
+  // envelope, so an attached mail is addressed like any other.
+  string metadata = 10;
+}
+
+message SendMediaResponse {
+  Message message = 1;
+}
+
+// ============================================================================
+// Log Messages
+// ============================================================================
+
+message GetLogsRequest {
+  string channelId = 1;
+  int32 page = 2;
+  int32 pageSize = 3;
+  int32 level = 4;      // Log level filter (0=info, 1=warn, 2=error, 3=critical)
+  string action = 5;    // Action filter
+}
+
+message ChannelLog {
+  string id = 1;
+  string channelId = 2;
+  string action = 3;
+  int32 level = 4;
+  string message = 5;
+  string data = 6;      // JSON-encoded data
+  string timestamp = 7;
+  string createdAt = 8;
+}
+
+message GetLogsResponse {
+  repeated ChannelLog logs = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 pageSize = 4;
+  bool hasMore = 5;
+}
+
+message GetWebhookLogsRequest {
+  string channelId = 1;
+  int32 page = 2;
+  int32 pageSize = 3;
+  int32 status = 4;     // Status filter (0=pending, 1=processing, 2=completed, 3=failed)
+  string action = 5;    // Action filter
+}
+
+message WebhookLog {
+  string id = 1;
+  string channelId = 2;
+  string action = 3;
+  string method = 4;
+  string url = 5;
+  int32 status = 6;
+  int32 attempts = 7;
+  int32 responseTime = 8;
+  int32 responseCode = 9;
+  string headers = 10;       // JSON-encoded headers
+  string body = 11;          // JSON-encoded body
+  string responseBody = 12;  // JSON-encoded response body
+  string error = 13;
+  string createdAt = 14;
+  string completedAt = 15;
+}
+
+message GetWebhookLogsResponse {
+  repeated WebhookLog logs = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 pageSize = 4;
+  bool hasMore = 5;
+}
+
+// ============================================================================
+// Event Streaming Messages
+// ============================================================================
+
+message StreamEventsRequest {
+  // Empty request - streams all events
+}
+
+message EventMessage {
+  string eventName = 1;
+  string channelId = 2;
+  string data = 3; // JSON-encoded event data
+  int64 timestamp = 4;
+}
+
+// ============================================================================
+// Kalagh Service Definition
+// ============================================================================
+
+service KalaghService {
+  // Channel Management
+  rpc CreateChannel(CreateChannelRequest) returns (CreateChannelResponse);
+  rpc GetChannel(GetChannelRequest) returns (GetChannelResponse);
+  rpc GetChannels(GetChannelsRequest) returns (GetChannelsResponse);
+  rpc UpdateChannel(UpdateChannelRequest) returns (UpdateChannelResponse);
+  rpc PatchChannelCredentials(PatchChannelCredentialsRequest) returns (PatchChannelCredentialsResponse);
+  rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse);
+  rpc TerminateChannel(DeleteChannelRequest) returns (DeleteChannelResponse);
+  rpc RestartChannel(DeleteChannelRequest) returns (DeleteChannelResponse);
+  rpc UnloadChannel(DeleteChannelRequest) returns (DeleteChannelResponse);
+  rpc RequestQRCode(GetChannelRequest) returns (CreateChannelResponse);
+
+  // Contact Management
+  rpc GetContacts(GetContactsRequest) returns (GetContactsResponse);
+  rpc CreateContact(CreateContactRequest) returns (CreateContactResponse);
+  rpc UpdateContact(UpdateContactRequest) returns (UpdateContactResponse);
+  rpc DeleteContact(DeleteContactRequest) returns (DeleteContactResponse);
+  rpc SyncContacts(SyncContactsRequest) returns (SyncContactsResponse);
+  rpc GetContactAvatar(GetContactAvatarRequest) returns (GetContactAvatarResponse);
+  rpc SearchContacts(SearchContactsRequest) returns (SearchContactsResponse);
+  rpc BlockContact(BlockContactRequest) returns (BlockContactResponse);
+  rpc UnblockContact(UnblockContactRequest) returns (UnblockContactResponse);
+  rpc UpdateContactStatus(UpdateContactStatusRequest) returns (UpdateContactStatusResponse);
+
+  // Chat Management
+  rpc GetChat(GetChatRequest) returns (GetChatResponse);
+  rpc GetChats(GetChatsRequest) returns (GetChatsResponse);
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
+  rpc UpdateChat(UpdateChatRequest) returns (UpdateChatResponse);
+  rpc DeleteChat(DeleteChatRequest) returns (DeleteChatResponse);
+  rpc SyncChats(SyncChatsRequest) returns (SyncChatsResponse);
+  rpc GetChatAvatar(GetChatAvatarRequest) returns (GetChatAvatarResponse);
+  rpc GetPlatformAliases(GetPlatformAliasesRequest) returns (GetPlatformAliasesResponse);
+  rpc GetContact(GetContactRequest) returns (GetContactResponse);
+  rpc GetMessage(GetMessageRequest) returns (GetMessageResponse);
+  rpc GetChatParticipants(GetChatParticipantsRequest) returns (GetChatParticipantsResponse);
+  rpc AddChatParticipant(AddChatParticipantRequest) returns (AddChatParticipantResponse);
+  rpc RemoveChatParticipant(RemoveChatParticipantRequest) returns (RemoveChatParticipantResponse);
+  rpc MuteChat(MuteChatRequest) returns (MuteChatResponse);
+  rpc UnmuteChat(UnmuteChatRequest) returns (UnmuteChatResponse);
+  rpc ArchiveChat(ArchiveChatRequest) returns (ArchiveChatResponse);
+  rpc UnarchiveChat(UnarchiveChatRequest) returns (UnarchiveChatResponse);
+  rpc PinChat(PinChatRequest) returns (PinChatResponse);
+  rpc UnpinChat(UnpinChatRequest) returns (UnpinChatResponse);
+  rpc MarkChatAsRead(MarkChatAsReadRequest) returns (MarkChatAsReadResponse);
+  rpc SearchChats(SearchChatsRequest) returns (SearchChatsResponse);
+
+  // Message Management
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
+  rpc GetMessageAttachments(GetMessageAttachmentsRequest) returns (GetMessageAttachmentsResponse);
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+  rpc SendLocation(SendLocationRequest) returns (SendMessageResponse);
+  rpc SendContact(SendContactRequest) returns (SendMessageResponse);
+  rpc SendPoll(SendPollRequest) returns (SendMessageResponse);
+  rpc SendEvent(SendEventRequest) returns (SendMessageResponse);
+  rpc SendInteractive(SendInteractiveRequest) returns (SendMessageResponse);
+  rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse);
+  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse);
+  rpc SyncMessages(SyncMessagesRequest) returns (SyncMessagesResponse);
+  rpc SyncChatMessages(SyncMessagesRequest) returns (SyncMessagesResponse);
+  rpc ReplyMessage(ReplyMessageRequest) returns (ReplyMessageResponse);
+  rpc ForwardMessage(ForwardMessageRequest) returns (ForwardMessageResponse);
+  rpc ReactToMessage(ReactToMessageRequest) returns (ReactToMessageResponse);
+  rpc RemoveReaction(RemoveReactionRequest) returns (RemoveReactionResponse);
+  rpc SearchMessages(SearchMessagesRequest) returns (SearchMessagesResponse);
+  rpc GetMessageMedia(GetMessageMediaRequest) returns (GetMessageMediaResponse);
+  rpc DownloadMessageMedia(DownloadMessageMediaRequest) returns (DownloadMessageMediaResponse);
+  rpc MarkMessageAsRead(MarkMessageAsReadRequest) returns (MarkMessageAsReadResponse);
+  rpc MarkMessagesAsRead(MarkMessagesAsReadRequest) returns (MarkMessagesAsReadResponse);
+  rpc GetMessageHistory(GetMessageHistoryRequest) returns (GetMessageHistoryResponse);
+
+  // Media Management
+  rpc SendMedia(SendMediaRequest) returns (SendMediaResponse);
+
+  // Log Management
+  rpc GetLogs(GetLogsRequest) returns (GetLogsResponse);
+  rpc GetWebhookLogs(GetWebhookLogsRequest) returns (GetWebhookLogsResponse);
+
+  // Event Streaming
+  rpc StreamEvents(StreamEventsRequest) returns (stream EventMessage);
+}
